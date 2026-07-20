@@ -584,6 +584,7 @@ footer {
     border-left: 4px solid #007bff;
     transition: background-color 0.8s ease, border-left-color 0.8s ease;
     position: relative;
+    gap: 4px;
     z-index: 0;
 }
 
