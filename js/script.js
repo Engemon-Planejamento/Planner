@@ -471,7 +471,7 @@ function abrirModal(dataString, atividadesDoDia, feriadosDoDia) {
         const isDiaAtual = (plantaoAtual && plantaoAtual.data === dataString && plantaoAtual.turno === 'dia');
         html += `
             <div class="on-call-modal ${isDiaAtual ? 'on-call-active' : ''}">
-                ☀️ <strong>Plantão Dia:</strong> ${plantaoDoDia.dia}
+                ☀️ <strong>Plantão Dia: </strong> ${plantaoDoDia.dia}
                 ${isDiaAtual ? '<span class="on-call-badge"></span>' : ''}
             </div>
         `;
@@ -480,7 +480,7 @@ function abrirModal(dataString, atividadesDoDia, feriadosDoDia) {
         const isNoiteAtual = (plantaoAtual && plantaoAtual.data === dataString && plantaoAtual.turno === 'noite');
         html += `
             <div class="on-call-modal ${isNoiteAtual ? 'on-call-active' : ''}">
-                🌙 <strong>Plantão Noite:</strong> ${plantaoDoDia.noite}
+                🌙 <strong>Plantão Noite: </strong> ${plantaoDoDia.noite}
                 ${isNoiteAtual ? '<span class="on-call-badge"></span>' : ''}
             </div>
         `;
