@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="../css/estilo.css">
     <link rel="stylesheet" href="../css/forms.css">
 </head>
+
 <body>
     <div id="container">
         <header>
@@ -20,10 +22,10 @@
             <!-- ========================================================== -->
             <section class="form-section">
                 <h2 id="form-title">Nova Empresa</h2>
-                
+
                 <form id="form-empresa">
                     <input type="hidden" id="edit-id" value="">
-                    
+
                     <!-- Nome da Empresa -->
                     <div class="form-group">
                         <label for="inEmpresa">Nome da Empresa</label>
@@ -49,7 +51,8 @@
                     <div class="form-actions">
                         <button type="submit" class="btn-salvar">💾 Salvar</button>
                         <button type="reset" class="btn-limpar">🔄 Limpar</button>
-                        <button type="button" class="btn-cancelar" id="btn-cancelar" style="display:none;">❌ Cancelar</button>
+                        <button type="button" class="btn-cancelar" id="btn-cancelar" style="display:none;">❌
+                            Cancelar</button>
                     </div>
                 </form>
             </section>
@@ -57,7 +60,7 @@
             <!-- ========================================================== -->
             <!-- LISTA DE EMPRESAS                                           -->
             <!-- ========================================================== -->
-            
+
         </main>
 
         <footer>
@@ -79,7 +82,17 @@
         </div>
     </div>
 
+    <!-- ========================================================== -->
+    <!-- FIREBASE SDK                                               -->
+    <!-- ========================================================== -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <!-- ========================================================== -->
+    <!-- MEUS SCRIPTS                                               -->
+    <!-- ========================================================== -->
     <script src="../js/firebase-config.js"></script>
     <script src="../js/crud-empresa.js"></script>
 </body>
+
 </html>
