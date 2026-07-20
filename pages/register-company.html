@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Empresas</title>
+    <link rel="stylesheet" href="../css/estilo.css">
+    <link rel="stylesheet" href="../css/forms.css">
+</head>
+<body>
+    <div id="container">
+        <header>
+            <h1>🏢 Cadastro de Empresas</h1>
+            <a href="index.html" class="btn-voltar">← Voltar</a>
+        </header>
+
+        <main>
+            <!-- ========================================================== -->
+            <!-- FORMULÁRIO DE CADASTRO                                      -->
+            <!-- ========================================================== -->
+            <section class="form-section">
+                <h2 id="form-title">Nova Empresa</h2>
+                
+                <form id="form-empresa">
+                    <input type="hidden" id="edit-id" value="">
+                    
+                    <!-- Nome da Empresa -->
+                    <div class="form-group">
+                        <label for="inEmpresa">Nome da Empresa</label>
+                        <input type="text" id="inEmpresa" placeholder="Ex: VERTIV" required>
+                    </div>
+
+                    <!-- Unidades -->
+                    <div class="form-group">
+                        <label>Unidades</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="unidade" value="TAMBORE" checked id="radio-tambore">
+                                <span>TAMBORÉ</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="unidade" value="CURITIBA" id="redio-curitiba">
+                                <span>CURITIBA</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Ações -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn-salvar">💾 Salvar</button>
+                        <button type="reset" class="btn-limpar">🔄 Limpar</button>
+                        <button type="button" class="btn-cancelar" id="btn-cancelar" style="display:none;">❌ Cancelar</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- ========================================================== -->
+            <!-- LISTA DE EMPRESAS                                           -->
+            <!-- ========================================================== -->
+            
+        </main>
+
+        <footer>
+            <p>BY MINIDEV</p>
+        </footer>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- MODAL DE CONFIRMAÇÃO                                        -->
+    <!-- ========================================================== -->
+    <div id="confirm-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h3>⚠️ Confirmar Exclusão</h3>
+            <p>Tem certeza que deseja excluir a empresa <strong id="confirm-nome"></strong>?</p>
+            <div class="modal-actions">
+                <button id="confirm-yes" class="btn-danger">Sim, excluir</button>
+                <button id="confirm-no" class="btn-secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/crud-empresa.js"></script>
+</body>
+</html>

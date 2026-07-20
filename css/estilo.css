@@ -1,0 +1,1128 @@
+@charset "UTF-8";
+
+/* ========================================================== */
+/* 1. RESET E CONFIGURAÇÕES BÁSICAS                           */
+/* ========================================================== */
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    padding-top: 5px;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+}
+
+/* ========================================================== */
+/* 2. LAYOUT GRID PRINCIPAL                                   */
+/* ========================================================== */
+
+#container {
+    display: grid;
+    grid-template: 50px auto 30px / 10px auto 10px;
+    gap: 10px;
+}
+
+.fa-bars {
+    background-color: rgba(184, 184, 184, 0.34);
+    color: #fafafa;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 1.5em;
+    cursor: pointer;
+    z-index: 1;
+    box-shadow: 0px 0px 7px 1px rgba(0, 0, 0, 0.268);
+    margin-right: 10px;
+    transition: 500ms;
+}
+
+.fa-bars:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 0px 7px 1px rgba(254, 254, 254, 0.326);
+}
+
+/* ========================================================== */
+/* 3. HEADER                                                  */
+/* ========================================================== */
+
+header {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    grid-area: 1 / 2 / 2 / 3;
+    background-color: #007bff;
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 10px 1px rgba(0, 0, 0, 0.289);
+}
+
+/* ========================================================== */
+/* HEADER - DIVS                                              */
+/* ========================================================== */
+
+.header-left,
+.header-center,
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+/* Esquerda: título */
+.header-left {
+    flex: 1;
+    justify-content: flex-start;
+}
+
+.header-left h1 {
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+/* Centro: navegação + mês */
+.header-center {
+    flex: 2;
+    justify-content: center;
+    gap: 15px;
+}
+
+.header-center button {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.header-center button:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.header-center h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+    min-width: 140px;
+    text-align: center;
+}
+
+/* Direita: switch */
+.header-right {
+    flex: 1;
+    justify-content: flex-end;
+}
+
+/* ========================================================== */
+/* 3.5 CONTROLES DE VISIBILIDADE                              */
+/* ========================================================== */
+
+.desktop-only {
+    display: none;
+}
+
+.mobile-only {
+    display: flex;
+}
+
+/* ========================================================== */
+/* 4. SWITCH DE CONTRATOS                                     */
+/* ========================================================== */
+
+.contract-switch {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 6px 14px;
+    border-radius: 30px;
+}
+
+.switch-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    transition: color 0.3s;
+    white-space: nowrap;
+}
+
+.switch-label.active {
+    color: #ffffff;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+    flex-shrink: 0;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: rgba(255, 255, 255, 0.3);
+    transition: 0.4s;
+    border-radius: 30px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+/* ========================================================== */
+/* 5. MAIN                                                    */
+/* ========================================================== */
+
+main {
+    grid-area: 2 / 2 / 3 / 3;
+    overflow-y: auto;
+}
+
+/* ========================================================== */
+/* 6. FOOTER                                                  */
+/* ========================================================== */
+
+footer {
+    grid-area: 3 / 1 / -1 / -1;
+    background-color: #343a40;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+/* ========================================================== */
+/* 7. CONTROLES DO CALENDÁRIO (FORA DO HEADER)                */
+/* ========================================================== */
+
+.calendar-controls {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: white;
+    padding: 5px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 15px;
+}
+
+.calendar-controls button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.calendar-controls button:hover {
+    background-color: #218838;
+}
+
+.calendar-controls h2 {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+/* ========================================================== */
+/* 8. FILTROS                                                 */
+/* ========================================================== */
+
+.filters-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.filters-section input,
+.filters-section button {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    font-size: 0.9rem;
+}
+
+.filters-section input {
+    background-color: white;
+}
+
+.filter-company-btn {
+    background-color: #e9ecef;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.filter-company-btn:hover {
+    background-color: #dee2e6;
+}
+
+#clear-filters {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#clear-filters:hover {
+    background-color: #c82333;
+}
+
+/* ========================================================== */
+/* 9. CALENDÁRIO (GRID)                                       */
+/* ========================================================== */
+
+#calendar-container {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background-color: #e9ecef;
+}
+
+.weekdays span {
+    padding: 5px 0;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.75rem;
+    border-right: 1px solid #ddd;
+}
+
+.weekdays span:last-child {
+    border-right: none;
+}
+
+.days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.day {
+    min-height: 60px;
+    padding: 5px;
+    border-right: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.day:nth-child(7n) {
+    border-right: none;
+}
+
+.day:hover:not(.empty) {
+    background-color: #f0f0f0;
+}
+
+.day-number {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #007bff;
+}
+
+.empty {
+    background-color: #f8f8f8;
+    cursor: default;
+    border: none;
+}
+
+.activity-indicator {
+    background-color: #ffc107;
+    color: #333;
+    font-size: 0.6rem;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-top: 2px;
+    white-space: nowrap;
+}
+
+/* ========================================================== */
+/* DIAS COM ATIVIDADES - FUNDO VERDE CLARO                    */
+/* ========================================================== */
+
+.day.has-activity {
+    background-color: #d4edda;
+    border-left: 3px solid #28a745;
+}
+
+.day.has-activity:hover {
+    background-color: #c3e6cb;
+}
+
+.day.holiday.has-activity {
+    background-color: #ffebeb;
+    border-left: 3px solid #ff6b6b;
+}
+
+/* ========================================================== */
+/* 10. MODAL - PRINCIPAL                                      */
+/* ========================================================== */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 500px;
+    margin: 20px auto;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+    margin-top: -5px;
+}
+
+.close-btn:hover {
+    color: #000;
+}
+
+.modal-header-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.modal-header-controls h3 {
+    font-size: 1rem;
+    margin: 0;
+}
+
+.pdf-clickable {
+    cursor: pointer;
+    width: 30px;
+}
+
+#modal-team-info {
+    margin-bottom: 15px;
+}
+
+#activities-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.no-activity {
+    text-align: center;
+    color: #999;
+    padding: 20px 0;
+    font-style: italic;
+}
+
+/* ========================================================== */
+/* 11. MODAL - ITENS DE ATIVIDADE                             */
+/* ========================================================== */
+
+.activity-item {
+    border: 1px solid #dcdbdb;
+    padding: 10px;
+    border-radius: 6px;
+    border-left: 5px solid rgba(0, 0, 255, 0.429);
+    box-shadow: 5px 3px 6px rgba(0, 0, 0, 0.194);
+}
+
+.activity-item h4 {
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+    color: #007bff;
+}
+
+.activity-item p {
+    font-size: 0.85rem;
+    color: #555;
+}
+
+/* Badge de contagem */
+.badge {
+    background: #007bff;
+    color: white;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin-left: 8px;
+}
+
+/* Grupo no modal */
+.group-item {
+    border-left: 4px solid #007bff;
+    transition: background 0.2s;
+}
+
+.group-item:hover {
+    background: #f0f7ff;
+}
+
+/* Item de feriado */
+.holiday-item {
+    background: #ffebeb;
+    border-left: 4px solid #ff6b6b;
+}
+
+/* Detalhe da atividade */
+.detail-item {
+    background: #f8f9fa;
+    border-left: 4px solid #007bff;
+}
+
+.detail-item p {
+    margin: 4px 0;
+}
+
+/* Botão voltar */
+.btn-back {
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 15px;
+    transition: background 0.2s;
+}
+
+.btn-back:hover {
+    background: #e0e0e0;
+}
+
+/* Botão adicionar observação */
+.btn-add-obs {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 15px;
+    width: 100%;
+    font-size: 14px;
+    transition: opacity 0.3s;
+}
+
+.btn-add-obs:hover {
+    opacity: 0.9;
+}
+
+/* ========================================================== */
+/* 12. MODAL - PLANTÃO                                        */
+/* ========================================================== */
+
+.on-call-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.on-call-modal {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #a2d2fc;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    border-left: 4px solid #007bff;
+    transition: background-color 0.8s ease, border-left-color 0.8s ease;
+    position: relative;
+    z-index: 0;
+}
+
+/* ========================================================== */
+/* PLANTÃO ATIVO - PULSO VERDE SUAVE                          */
+/* ========================================================== */
+
+.on-call-modal.on-call-active {
+    background-color: #d4edda;
+    border-left-color: #28a745;
+    font-weight: 600;
+    animation: pulse-green 2s ease-in-out infinite;
+}
+
+@keyframes pulse-green {
+    0%, 100% {
+        background-color: #d4edda;
+    }
+    50% {
+        background-color: #a8d5a2;
+    }
+}
+
+/* ========================================================== */
+/* REMOVER O BADGE "AGORA" (NÃO SERÁ MAIS USADO)             */
+/* ========================================================== */
+
+.on-call-badge {
+    display: none;
+}
+
+/* ========================================================== */
+/* 13. TAGS FLUTUANTES - PERIODICIDADE E CATEGORIA           */
+/* ========================================================== */
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.tag {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 2px 12px;
+    border-radius: 20px;
+    border: 1.5px solid;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    background: transparent;
+}
+
+/* ---- Periodicidade ---- */
+.tag-periodicidade {
+    color: #0056b3;
+    border-color: #0056b3;
+    background: #e8f0fe;
+}
+
+.tag-periodicidade.mensal {
+    color: #c0392b;
+    border-color: #c0392b;
+    background: #fde8e8;
+}
+
+.tag-periodicidade.bimestral {
+    color: #d35400;
+    border-color: #d35400;
+    background: #fef0e6;
+}
+
+.tag-periodicidade.trimestral {
+    color: #f39c12;
+    border-color: #f39c12;
+    background: #fef9e7;
+}
+
+.tag-periodicidade.quadrimestral {
+    color: #2c3e50;
+    border-color: #2c3e50;
+    background: #eef2f5;
+}
+
+.tag-periodicidade.semestral {
+    color: #27ae60;
+    border-color: #27ae60;
+    background: #eafaf1;
+}
+
+.tag-periodicidade.anual {
+    color: #e74c3c;
+    border-color: #e74c3c;
+    background: #fdedec;
+}
+
+/* ---- Categoria ---- */
+.tag-categoria {
+    color: #1e7e34;
+    border-color: #1e7e34;
+    background: #e8f5e9;
+}
+
+.tag-categoria.preventiva {
+    color: #1e7e34;
+    border-color: #1e7e34;
+    background: #e8f5e9;
+}
+
+.tag-categoria.corretiva {
+    color: #c62828;
+    border-color: #c62828;
+    background: #ffebee;
+}
+
+.tag-categoria.preditiva {
+    color: #0d47a1;
+    border-color: #0d47a1;
+    background: #e3f2fd;
+}
+
+.tag-categoria.emergencial {
+    color: #bf360c;
+    border-color: #bf360c;
+    background: #fbe9e7;
+}
+
+/* ---- Descrição da atividade (abaixo das tags) ---- */
+.activity-description {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* ========================================================== */
+/* 14. MODAL - EMPRESA (FILTRO)                               */
+/* ========================================================== */
+
+.company-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 15px 0;
+}
+
+.company-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.company-option:hover {
+    background-color: #f5f5f5;
+}
+
+.company-option input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.modal-actions button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.apply-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.apply-btn:hover {
+    opacity: 0.9;
+}
+
+.cancel-btn {
+    background-color: #e9ecef;
+    color: #333;
+}
+
+.cancel-btn:hover {
+    opacity: 0.9;
+}
+
+/* ========================================================== */
+/* 15. RESPONSIVIDADE - MOBILE (até 600px)                    */
+/* ========================================================== */
+
+@media (max-width: 600px) {
+    header {
+        flex-direction: row;
+        gap: 10px;
+        padding: 12px;
+    }
+
+
+    .header-center {
+        display: none;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .header-left h1 {
+        font-size: 1.1rem;
+    }
+
+    .header-center {
+        gap: 10px;
+    }
+
+    .header-center h2 {
+        font-size: 1rem;
+        min-width: 100px;
+    }
+
+    .header-center button {
+        padding: 4px 10px;
+        font-size: 0.9rem;
+    }
+
+    .header-right {
+        justify-content: center;
+    }
+
+    .contract-switch {
+        padding: 4px 10px;
+        gap: 6px;
+    }
+
+    .switch {
+        width: 42px;
+        height: 22px;
+    }
+
+    .slider:before {
+        height: 14px;
+        width: 14px;
+        left: 4px;
+        bottom: 4px;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(20px);
+    }
+
+    .switch-label {
+        font-size: 0.7rem;
+    }
+
+    .filters-section {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .day {
+        min-height: 50px;
+        padding: 3px;
+    }
+
+    .day-number {
+        font-size: 0.8rem;
+    }
+
+    .weekdays span {
+        font-size: 0.65rem;
+        padding: 4px 0;
+    }
+
+    .activity-indicator {
+        font-size: 0.5rem;
+        padding: 1px 4px;
+    }
+
+    .modal-content {
+        padding: 15px;
+        margin: 10px auto;
+    }
+
+    .modal-header-controls h3 {
+        font-size: 0.9rem;
+    }
+
+    .on-call-modal {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+
+    .on-call-badge {
+        font-size: 0.55rem;
+        padding: 1px 8px;
+    }
+
+    .tag {
+        font-size: 0.5rem;
+        padding: 1px 8px;
+    }
+
+    .activity-description {
+        font-size: 0.85rem;
+    }
+
+    .btn-back {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    .btn-add-obs {
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+}
+
+/* ========================================================== */
+/* 16. RESPONSIVIDADE - TABLET (601px - 1023px)              */
+/* ========================================================== */
+
+@media (min-width: 601px) and (max-width: 1023px) {
+    #container {
+        gap: 20px;
+        padding: 10px;
+    }
+
+    .header-left h1 {
+        font-size: 1.5rem;
+    }
+
+    .header-center h2 {
+        font-size: 1.1rem;
+        min-width: 120px;
+    }
+
+    .header-center button {
+        padding: 6px 12px;
+    }
+
+    .day {
+        min-height: 70px;
+        padding: 6px;
+    }
+
+    .day-number {
+        font-size: 0.95rem;
+    }
+
+    .weekdays span {
+        font-size: 0.8rem;
+        padding: 8px 0;
+    }
+
+    .modal-content {
+        padding: 20px;
+        margin: 15px auto;
+        max-width: 550px;
+    }
+
+    .filters-section {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .filters-section input {
+        flex: 2;
+        min-width: 180px;
+    }
+
+    .filters-section button {
+        flex: 0 1 auto;
+    }
+
+    .contract-switch {
+        padding: 4px 12px;
+        gap: 8px;
+    }
+
+    .switch {
+        width: 46px;
+        height: 24px;
+    }
+
+    .slider:before {
+        height: 16px;
+        width: 16px;
+        left: 4px;
+        bottom: 4px;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(22px);
+    }
+
+    .switch-label {
+        font-size: 0.75rem;
+    }
+}
+
+/* ========================================================== */
+/* 17. RESPONSIVIDADE - DESKTOP (1024px+)                     */
+/* ========================================================== */
+
+@media (min-width: 1024px) {
+    #container {
+        grid-template: 120px auto 60px / 5% auto 5%;
+        gap: 25px;
+        padding: 20px;
+        max-width: 1400px;
+        margin: 0 auto;
+    } 
+
+    .fa-bars {
+        position: absolute;
+        top: 5px;
+        left: 20px;
+        background-color: #007bff;
+    }
+
+    .fa-bars:hover {
+        box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.553) !important;
+    }
+
+    /* Mostra controles no header, esconde os de fora */
+    .desktop-only {
+        display: flex !important;
+    }
+
+    .mobile-only {
+        display: none !important;
+    }
+
+    .header-left h1 {
+        font-size: 2rem;
+    }
+
+    .header-center h2 {
+        font-size: 1.4rem;
+        min-width: 160px;
+    }
+
+    .header-center button {
+        padding: 8px 20px;
+        font-size: 1.1rem;
+    }
+
+    .day {
+        min-height: 80px;
+        padding: 10px;
+    }
+
+    .day-number {
+        font-size: 1.1rem;
+    }
+
+    .activity-indicator {
+        font-size: 0.7rem;
+        padding: 3px 10px;
+    }
+
+    .modal-content {
+        max-width: 650px;
+        padding: 30px;
+        border-radius: 12px;
+    }
+
+    .modal-header-controls h3 {
+        font-size: 1.2rem;
+    }
+
+    .filters-section {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .filters-section input {
+        flex: 3;
+        min-width: 250px;
+    }
+
+    .filters-section button {
+        flex: 0 1 auto;
+    }
+
+    .on-call-modal {
+        font-size: 1rem;
+        padding: 10px 16px;
+    }
+
+    .tag {
+        font-size: 0.7rem;
+        padding: 3px 14px;
+    }
+
+    .activity-description {
+        font-size: 1rem;
+    }
+
+    .contract-switch {
+        padding: 6px 16px;
+        gap: 12px;
+    }
+
+    .switch {
+        width: 54px;
+        height: 28px;
+    }
+
+    .slider:before {
+        height: 20px;
+        width: 20px;
+        left: 4px;
+        bottom: 4px;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(26px);
+    }
+
+    .switch-label {
+        font-size: 0.85rem;
+    }
+}

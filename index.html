@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ========================================================== -->
+    <!-- FONT AWESOME                                               -->
+    <!-- ========================================================== -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>PLANNER 2026</title>
+
+    <!-- ========================================================== -->
+    <!-- CSS                                                         -->
+    <!-- ========================================================== -->
+    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="css/filtroempresas.css">
+</head>
+
+<body>
+    <!-- ========================================================== -->
+    <!-- CONTAINER PRINCIPAL                                         -->
+    <!-- ========================================================== -->
+    <div id="container">
+
+
+        <!-- ========================================================== -->
+        <!-- HEADER - TÍTULO + SWITCH DE CONTRATOS                       -->
+        <!-- ========================================================== -->
+        <header>
+            <i class="fa-solid fa-bars"></i>
+            <!-- ESQUERDA: Título -->
+            <div class="header-left">
+                <h1>Planner</h1>
+            </div>
+
+            <!-- CENTRO: Controles (visível apenas em desktop) -->
+            <div class="header-center desktop-only">
+                <button id="prev-month-desktop"><i class="fa-solid fa-square-caret-left"></i></button>
+                <h2 id="current-month-year-desktop">Julho 2026</h2>
+                <button id="next-month-desktop"><i class="fa-solid fa-square-caret-right"></i></button>
+            </div>
+
+            <!-- DIREITA: Switch -->
+            <div class="header-right">
+                <div class="contract-switch">
+                    <span class="switch-label active" id="label-tambore">🌙 TAMBORÉ</span>
+                    <label class="switch">
+                        <input type="checkbox" id="contract-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="switch-label" id="label-curitiba">🌞 CURITIBA</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- ========================================================== -->
+        <!-- MAIN - CONTEÚDO PRINCIPAL                                   -->
+        <!-- ========================================================== -->
+        <main>
+
+            <!-- ========================================================== -->
+            <!-- CONTROLES FORA DO HEADER (MOBILE/TABLET)                    -->
+            <!-- ========================================================== -->
+            <section class="calendar-controls mobile-only">
+                <button id="prev-month" aria-label="Mês anterior"><i class="fa-solid fa-square-caret-left"></i></button>
+                <h2 id="current-month-year">Julho 2026</h2>
+                <button id="next-month" aria-label="Próximo mês"><i class="fa-solid fa-square-caret-right"></i></button>
+            </section>
+
+            <!-- ========================================================== -->
+            <!-- FILTROS (DESCRIÇÃO + EMPRESA)                              -->
+            <!-- ========================================================== -->
+            <section class="filters-section">
+                <input type="text" id="description-filter" placeholder="Filtrar por descrição...">
+                <button id="company-filter-btn" class="filter-company-btn">
+                    🏢 Selecionar Empresa
+                </button>
+                <button id="clear-filters">Limpar filtros</button>
+            </section>
+
+            <!-- ========================================================== -->
+            <!-- CALENDÁRIO (DIAS DA SEMANA + GRID)                         -->
+            <!-- ========================================================== -->
+            <section id="calendar-container">
+                <div class="weekdays">
+                    <span>Dom</span>
+                    <span>Seg</span>
+                    <span>Ter</span>
+                    <span>Qua</span>
+                    <span>Qui</span>
+                    <span>Sex</span>
+                    <span>Sáb</span>
+                </div>
+                <div id="days-grid" class="days-grid"></div>
+            </section>
+
+            <!-- ========================================================== -->
+            <!-- MODAL - ATIVIDADES DO DIA                                  -->
+            <!-- ========================================================== -->
+            <div id="activity-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-btn" id="close-modal">&times;</span>
+                    <div class="modal-header-controls">
+                        <h3>
+                            Detalhes do Dia:
+                            <span id="modal-date-display"></span>
+                        </h3>
+                        <img src="img/ico-dowload.gif" id="export-pdf" class="pdf-clickable"
+                            alt="Exportar atividades do dia para PDF" title="Exportar PDF" style="display: none;" />
+                    </div>
+                    <div id="modal-team-info"></div>
+                    <div id="activities-list">
+                        <p class="no-activity">Nenhuma atividade agendada neste dia.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================================== -->
+            <!-- MODAL - SELEÇÃO DE EMPRESA (FILTRO)                        -->
+            <!-- ========================================================== -->
+            <div id="company-modal" class="modal">
+                <div class="modal-content company-modal-content">
+                    <span class="close-btn" id="close-company-modal">&times;</span>
+                    <h3>🏢 Selecionar Empresa</h3>
+                    <div class="company-list"></div>
+                    <div class="modal-actions">
+                        <button id="apply-company-filter" class="apply-btn">Aplicar Filtro</button>
+                        <button id="cancel-company-filter" class="cancel-btn">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- ========================================================== -->
+        <!-- FOOTER                                                      -->
+        <!-- ========================================================== -->
+        <footer>
+            <p>BY ENGEMON</p>
+        </footer>
+
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- SCRIPTS                                                     -->
+    <!-- ========================================================== -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/plantao-equipes.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/switch.js"></script>
+
+</body>
+
+</html>

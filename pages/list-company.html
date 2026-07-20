@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empresas Cadastradas</title>
+    
+    <!-- CSS REUTILIZÁVEIS -->
+    <link rel="stylesheet" href="../css/estilo.css">
+    <link rel="stylesheet" href="../css/forms.css">
+</head>
+<body>
+    <div id="container">
+        <header>
+            <h1>🏢 Empresas</h1>
+            <div class="header-actions">
+                <a href="register-company.html" class="btn-novo">➕ Nova</a>
+                <a href="../index.html" class="btn-voltar">← Voltar</a>
+            </div>
+        </header>
+
+        <main>
+            <section class="list-section">
+                <h2>📋 Empresas Cadastradas</h2>
+                
+                <div id="lista-empresas">
+                    <div id="cards-container">
+                        <p class="loading-data">⏳ Carregando empresas...</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>BY MINIDEV</p>
+        </footer>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- MODAL DE CONFIRMAÇÃO                                        -->
+    <!-- ========================================================== -->
+    <div id="confirm-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h3>⚠️ Confirmar Exclusão</h3>
+            <p>Tem certeza que deseja excluir <strong id="confirm-nome"></strong>?</p>
+            <div class="modal-actions">
+                <button id="confirm-yes" class="btn-danger">Sim, excluir</button>
+                <button id="confirm-no" class="btn-secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 1º SDK do Firebase (CDN) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+<!-- 2º Configuração do Firebase -->
+<script src="../js/firebase-config.js"></script>
+
+<!-- 3º CRUD -->
+<script src="../js/crud-empresa.js"></script>
+</body>
+</html>

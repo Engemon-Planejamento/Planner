@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Atividade</title>
+    <link rel="stylesheet" href="../css/estilo.css">
+    <link rel="stylesheet" href="../css/forms.css">
+</head>
+
+<body>
+    <div id="container">
+        <header>
+            <h1>📝 Cadastrar Atividade</h1>
+            <div class="header-actions">
+                <a href="../index.html" class="btn-voltar">← Voltar</a>
+            </div>
+        </header>
+
+        <main>
+            <section class="form-section">
+                <h2 id="form-title">Nova Atividade</h2>
+
+                <form id="form-atividade">
+                    <input type="hidden" id="edit-id" value="">
+
+                    <!-- Data -->
+                    <div class="form-group">
+                        <label for="inData">Data</label>
+                        <input type="date" id="inData" required>
+                    </div>
+
+                    <!-- Empresa -->
+                    <div class="form-group">
+                        <label for="inEmpresa">Empresa</label>
+                        <select id="inEmpresa" required>
+                            <option value="">Selecione uma empresa</option>
+                        </select>
+                    </div>
+
+                    <!-- Descrição -->
+                    <div class="form-group">
+                        <label for="inDescricao">Descrição</label>
+                        <input type="text" id="inDescricao" placeholder="Ex: PDU - DATAHALL / TI" required>
+                    </div>
+
+                    <!-- Periodicidade -->
+                    <div class="form-group">
+                        <label for="inPeriodicidade">Periodicidade</label>
+                        <select id="inPeriodicidade" required>
+                            <option value="">Selecione a periodicidade</option>
+                        </select>
+                    </div>
+
+                    <!-- Categoria -->
+                    <div class="form-group">
+                        <label for="inCategoria">Categoria</label>
+                        <select id="inCategoria" required>
+                            <option value="">Selecione a categoria</option>
+                        </select>
+                    </div>
+
+                    <!-- Unidade -->
+                    <div class="form-group">
+                        <label>Unidade</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" name="unidade" value="TAMBORE" checked>
+                                <span>TAMBORÉ</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" name="unidade" value="CURITIBA">
+                                <span>CURITIBA</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Grupo -->
+                    <div class="form-group">
+                        <label for="inGrupo">Grupo (opcional)</label>
+                        <input type="text" id="inGrupo" placeholder="Ex: VERTIV_POWER">
+                    </div>
+
+                    <!-- Ações -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn-salvar">💾 Salvar</button>
+                        <button type="reset" class="btn-limpar">🔄 Limpar</button>
+                        <button type="button" class="btn-cancelar" id="btn-cancelar" style="display:none;">❌
+                            Cancelar</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- ========================================================== -->
+            <!-- LISTA DE ATIVIDADES (opcional)                              -->
+            <!-- ========================================================== -->
+            <section class="list-section">
+                <h2>📋 Últimas Atividades</h2>
+                <div id="cards-container">
+                    <p class="loading-data">⏳ Carregando atividades...</p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>BY MINIDEV</p>
+        </footer>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- MODAL DE CONFIRMAÇÃO                                        -->
+    <!-- ========================================================== -->
+    <div id="confirm-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h3>⚠️ Confirmar Exclusão</h3>
+            <p>Tem certeza que deseja excluir a atividade <strong id="confirm-nome"></strong>?</p>
+            <div class="modal-actions">
+                <button id="confirm-yes" class="btn-danger">Sim, excluir</button>
+                <button id="confirm-no" class="btn-secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- FIREBASE SDK                                               -->
+    <!-- ========================================================== -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/crud-atividade.js"></script>
+</body>
+
+</html>

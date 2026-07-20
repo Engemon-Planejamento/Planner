@@ -1,0 +1,243 @@
+@charset "UTF-8";
+
+/* ========================================================== */
+/* FORMULÁRIO - MOBILE FIRST                                  */
+/* ========================================================== */
+
+/* Cada campo ocupa uma linha */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+/* Label em cima do input */
+.form-group label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+/* Input ocupa toda largura */
+.form-group input[type="text"] {
+    padding: 12px 14px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    width: 60%;
+}
+
+.form-group input[type="text"]:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+/* ========================================================== */
+/* CHECKBOXES                                                 */
+/* ========================================================== */
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 4px 0;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-size: 0.95rem;
+}
+
+.checkbox-label:hover {
+    background: #f5f5f5;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.checkbox-label input[type="checkbox"]:checked+span {
+    font-weight: 600;
+}
+
+/* ========================================================== */
+/* BOTÕES - MOBILE FIRST                                      */
+/* ========================================================== */
+
+.form-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.form-actions button {
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+}
+
+.btn-salvar {
+    background: #28a745;
+    color: white;
+}
+
+.btn-salvar:hover {
+    background: #218838;
+}
+
+.btn-limpar {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-limpar:hover {
+    background: #5a6268;
+}
+
+.btn-cancelar {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-cancelar:hover {
+    background: #c82333;
+}
+
+/* ========================================================== */
+/* CARDS - LISTA DE EMPRESAS (MOBILE)                         */
+/* ========================================================== */
+
+.card-empresa {
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.card-empresa .nome {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #007bff;
+}
+
+.card-empresa .unidades {
+    font-size: 0.85rem;
+    color: #666;
+    margin: 4px 0 12px 0;
+}
+
+.card-empresa .acoes {
+    display: flex;
+    gap: 8px;
+}
+
+.card-empresa .acoes button {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-editar {
+    background: #007bff;
+    color: white;
+}
+
+.btn-editar:hover {
+    background: #0056b3;
+}
+
+.btn-excluir {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-excluir:hover {
+    background: #a71d2a;
+}
+
+.no-data {
+    text-align: center;
+    color: #999;
+    padding: 30px 0;
+    font-style: italic;
+}
+
+/* ========================================================== */
+/* BOTÃO VOLTAR                                               */
+/* ========================================================== */
+
+.btn-voltar {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 16px;
+    border-radius: 6px;
+}
+
+.btn-voltar:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* ========================================================== */
+/* RESPONSIVIDADE - TABLET/DESKTOP                            */
+/* ========================================================== */
+
+@media (min-width: 600px) {
+    .form-actions {
+        flex-direction: row;
+    }
+
+    .form-actions button {
+        width: auto;
+        padding: 12px 24px;
+    }
+
+    .checkbox-group {
+        flex-direction: row;
+        gap: 12px;
+    }
+
+    .checkbox-label {
+        padding: 8px 16px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .form-group input[type="text"] {
+        max-width: 500px;
+    }
+
+    .card-empresa {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 20px;
+    }
+
+    .card-empresa .acoes {
+        margin: 0;
+    }
+}

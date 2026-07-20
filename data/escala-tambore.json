@@ -1,0 +1,28 @@
+{
+    "escalas": [
+        {
+            "semana": 1,
+            "dias": {
+                "SEG": { "dia": "Equipe C", "noite": "Equipe D" },
+                "TER": { "dia": "Equipe A", "noite": "Equipe B" },
+                "QUA": { "dia": "Equipe C", "noite": "Equipe D" },
+                "QUI": { "dia": "Equipe A", "noite": "Equipe B" },
+                "SEX": { "dia": "Equipe C", "noite": "Equipe D" },
+                "SAB": { "dia": "Equipe C", "noite": "Equipe D" },
+                "DOM": { "dia": "Equipe C", "noite": "Equipe D" }
+            }
+        },
+        {
+            "semana": 2,
+            "dias": {
+                "SEG": { "dia": "Equipe A", "noite": "Equipe B" },
+                "TER": { "dia": "Equipe C", "noite": "Equipe D" },
+                "QUA": { "dia": "Equipe A", "noite": "Equipe B" },
+                "QUI": { "dia": "Equipe C", "noite": "Equipe D" },
+                "SEX": { "dia": "Equipe A", "noite": "Equipe B" },
+                "SAB": { "dia": "Equipe A", "noite": "Equipe B" },
+                "DOM": { "dia": "Equipe A", "noite": "Equipe B" }
+            }
+        }
+    ]
+}
