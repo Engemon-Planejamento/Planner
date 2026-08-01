@@ -24,7 +24,7 @@
     <!-- ========================================================== -->
     <div id="container">
 
-        <div style="display: none;" id="menu">
+        <div id="menu">
             <nav>
                 <ul>
                     <li>
@@ -131,8 +131,11 @@
                             Detalhes do Dia:
                             <span id="modal-date-display"></span>
                         </h3>
-                        <img src="img/ico-dowload.gif" id="export-pdf" class="pdf-clickable"
-                            alt="Exportar atividades do dia para PDF" title="Exportar PDF" style="display: none;" />
+                        <i class="fa-solid fa-file-pdf" id="export-pdf"
+                            style="display: none; font-size: 2rem; color: #dc3545; cursor: pointer;"
+                            title="Exportar PDF"></i><img src="img/ico-dowload.gif" id="export-pdf"
+                            class="pdf-clickable" alt="Exportar atividades do dia para PDF" title="Exportar PDF"
+                            style="display: none;" />
                     </div>
                     <div id="modal-team-info"></div>
                     <div id="activities-list">
@@ -161,7 +164,7 @@
         <!-- ========================================================== -->
         <!-- FOOTER                                                      -->
         <!-- ========================================================== -->
-        
+
 
     </div>
 
@@ -170,6 +173,7 @@
     <!-- ========================================================== -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="js/firebase-config.js"></script>
     <script src="js/plantao-equipes.js"></script>
     <script src="js/script.js"></script>

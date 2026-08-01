@@ -14,8 +14,9 @@ const DIAS_SEMANA = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 // 2. ESTADO DO SISTEMA                                       */
 // ========================================================== */
 
-let currentYear = 2026;
-let currentMonth = 6; // Julho (0 = Janeiro)
+let data = new Date();
+let currentYear = data.getFullYear();
+let currentMonth = data.getMonth(); // Julho (0 = Janeiro)
 let atividades = [];
 let feriados = [];
 let contratoAtivo = 'TAMBORE'; // ou 'CURITIBA'
@@ -140,12 +141,12 @@ const modal = document.getElementById('activity-modal');
 
 function atualizarTituloMes(ano, mes) {
     const texto = `${MESES[mes]} ${ano}`;
-    
+
     // Atualiza mobile/tablet
     if (currentMonthYearHeader) {
         currentMonthYearHeader.textContent = texto;
     }
-    
+
     // Atualiza desktop
     if (currentMonthYearHeaderDesktop) {
         currentMonthYearHeaderDesktop.textContent = texto;
@@ -455,6 +456,18 @@ function abrirModal(dataString, atividadesDoDia, feriadosDoDia) {
     const dataFormatada = dataString.split('-').reverse().join('/');
     modalDateDisplay.textContent = dataFormatada;
 
+    // ========================================================== */
+    // MOSTRAR/ESCONDER BOTÃO PDF                                 */
+    // ========================================================== */
+
+    const exportPdfBtn = document.getElementById('export-pdf');
+    if (atividadesDoDia.length > 0) {
+        exportPdfBtn.style.display = 'block';
+        exportPdfBtn.onclick = exportarPDF;
+    } else {
+        exportPdfBtn.style.display = 'none';
+    }
+
     // ==========================================================
     // EXIBIR PLANTÃO DO DIA
     // ==========================================================
@@ -715,7 +728,13 @@ function abrirNivel3(activity) {
         btnAddObs.className = 'btn-add-obs';
         btnAddObs.textContent = '+ Adicionar Observação';
         btnAddObs.addEventListener('click', () => {
-            alert('Funcionalidade de adicionar observação em breve!');
+            const atividadeId = activity.id;
+            const empresa = activity.empresa;
+            const descricao = activity.descricao;
+
+            // Abre a página de observação em nova aba
+            const url = `pages/add-observation.html?atividadeId=${atividadeId}&empresa=${encodeURIComponent(empresa)}&descricao=${encodeURIComponent(descricao)}`;
+            window.open(url, '_blank');
         });
         activitiesList.appendChild(btnAddObs);
     }
@@ -723,17 +742,196 @@ function abrirNivel3(activity) {
 
 
 // ========================================================== */
-// 15. FECHAR MODAL                                           */
+// 14. FECHAR MODAL                                           */
 // ========================================================== */
 
 closeModalBtn.addEventListener('click', () => {
     modal.style.display = 'none';
 });
 
-// Fecha ao clicar fora do modal
 window.addEventListener('click', (e) => {
     if (e.target === modal) {
         modal.style.display = 'none';
+    }
+});
+
+// ========================================================== */
+// 15. EXPORTAR PDF DO DIA                                    */
+// ========================================================== */
+
+async function exportarPDF() {
+    const { jsPDF } = window.jspdf;
+
+    const dataString = modalState.data;
+    const atividades = modalState.todasAtividades;
+    const feriados = modalState.feriados;
+
+    if (!dataString || atividades.length === 0) {
+        alert('⚠️ Nenhuma atividade para exportar neste dia.');
+        return;
+    }
+
+    const plantaoDoDia = buscarPlantaoDoDia(dataString);
+
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 15;
+    let y = margin + 10;
+    const lineHeight = 7;
+
+    // ========================================================== */
+    // 1. TÍTULO (sem emoji)
+    // ========================================================== */
+    doc.setFontSize(16);
+    doc.setTextColor(0, 123, 255);
+    doc.setFont('helvetica', 'bold');
+    const dataFormatada = dataString.split('-').reverse().join('/');
+    doc.text(`RELATORIO DE ATIVIDADES - ${dataFormatada}`, margin, y);
+    y += lineHeight + 5;
+
+    // ========================================================== */
+    // 2. PLANTÃO (sem emoji)
+    // ========================================================== */
+    doc.setFontSize(11);
+    doc.setTextColor(50, 50, 50);
+    doc.setFont('helvetica', 'normal');
+
+    if (plantaoDoDia) {
+        doc.text(`Plantao Dia: ${plantaoDoDia.dia}`, margin, y);
+        y += lineHeight;
+        doc.text(`Plantao Noite: ${plantaoDoDia.noite}`, margin, y);
+        y += lineHeight + 3;
+    }
+
+    // Linha separadora
+    doc.setDrawColor(200, 200, 200);
+    doc.line(margin, y, pageWidth - margin, y);
+    y += lineHeight;
+
+    // ========================================================== */
+    // 3. ATIVIDADES POR EMPRESA
+    // ========================================================== */
+    const grupos = {};
+    atividades.forEach(activity => {
+        const empresa = activity.empresa;
+        if (!grupos[empresa]) grupos[empresa] = [];
+        grupos[empresa].push(activity);
+    });
+
+    const empresasOrdenadas = Object.keys(grupos).sort();
+    let totalAtividades = 0;
+
+    empresasOrdenadas.forEach(empresa => {
+        const atividadesEmpresa = grupos[empresa];
+        totalAtividades += atividadesEmpresa.length;
+
+        if (y > 260) {
+            doc.addPage();
+            y = margin + 10;
+        }
+
+        // Nome da empresa (sem emoji)
+        doc.setFontSize(13);
+        doc.setTextColor(0, 123, 255);
+        doc.setFont('helvetica', 'bold');
+        doc.text(`>> ${empresa}`, margin, y);
+        y += lineHeight - 1;
+
+        doc.setFontSize(10);
+        doc.setTextColor(50, 50, 50);
+        doc.setFont('helvetica', 'normal');
+
+        atividadesEmpresa.forEach(activity => {
+            if (y > 275) {
+                doc.addPage();
+                y = margin + 10;
+            }
+
+            const periodicidade = activity.periodicidade || '';
+            const descricao = activity.descricao || 'Sem descrição';
+            const texto = `   - ${descricao}${periodicidade ? ` (${periodicidade})` : ''}`;
+
+            const linhas = doc.splitTextToSize(texto, pageWidth - margin - 20);
+            doc.text(linhas, margin + 5, y);
+            y += (linhas.length * lineHeight) + 1;
+        });
+
+        y += 2;
+    });
+
+    // ========================================================== */
+    // 4. FERIADOS (se houver)
+    // ========================================================== */
+    if (feriados && feriados.length > 0) {
+        if (y > 260) {
+            doc.addPage();
+            y = margin + 10;
+        }
+
+        doc.setFontSize(12);
+        doc.setTextColor(200, 50, 50);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Feriados:', margin, y);
+        y += lineHeight;
+
+        doc.setFontSize(10);
+        doc.setTextColor(50, 50, 50);
+        doc.setFont('helvetica', 'normal');
+        feriados.forEach(feriado => {
+            doc.text(`   - ${feriado.descricao}`, margin + 5, y);
+            y += lineHeight;
+        });
+        y += 3;
+    }
+
+    // ========================================================== */
+    // 5. RODAPÉ
+    // ========================================================== */
+    if (y > 270) {
+        doc.addPage();
+        y = margin + 10;
+    }
+
+    doc.setDrawColor(200, 200, 200);
+    doc.line(margin, y, pageWidth - margin, y);
+    y += lineHeight - 2;
+
+    doc.setFontSize(11);
+    doc.setTextColor(100, 100, 100);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Total de atividades: ${totalAtividades}`, margin, y);
+    y += lineHeight;
+
+    const agora = new Date();
+    const dataGeracao = agora.toLocaleDateString('pt-BR');
+    const horaGeracao = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    doc.setFontSize(9);
+    doc.setTextColor(150, 150, 150);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Gerado em: ${dataGeracao} ${horaGeracao}`, margin, y);
+
+    const nomeArquivo = `atividades_${dataString}.pdf`;
+    doc.save(nomeArquivo);
+}
+
+// ========================================================== */
+// 16. EXPORTA FUNÇÕES PARA OUTROS MÓDULOS                    */
+// ========================================================== */
+
+window.renderizarCalendario = renderizarCalendario;
+window.currentYear = currentYear;
+window.currentMonth = currentMonth;
+
+// ========================================================== */
+// 17. INICIALIZAÇÃO                                          */
+// ========================================================== */
+
+document.addEventListener('DOMContentLoaded', function () {
+    if (typeof db !== 'undefined') {
+        carregarDados();
+    } else {
+        console.warn('⚠️ Firebase não disponível, usando fallback JSON');
+        carregarDadosFallback();
     }
 });
 
@@ -752,7 +950,7 @@ window.currentMonth = currentMonth;
 // ========================================================== */
 
 // Aguarda o Firebase carregar antes de buscar os dados
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Verifica se o Firebase está disponível
     if (typeof db !== 'undefined') {
         carregarDados();

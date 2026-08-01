@@ -27,22 +27,33 @@ body {
     gap: 10px;
 }
 
-.menu {
-    backdrop-filter: blur(2px);
-    padding-top: 25px;
+/* ========================================================== */
+/* 3. MENU                                                    */
+/* ========================================================== */
+
+#menu {
+    display: none;
+    pointer-events: none; /* ← ADICIONE ESTA LINHA */
+}
+
+#menu.active {
+    display: flex !important;
+    position: fixed;
     top: 0;
     left: 0;
-    position: absolute;
-    width: 98vw;
-    height: 98dvh;
-    display: flex !important;
+    width: 100vw;
+    height: 100dvh;
+    backdrop-filter: blur(2px);
+    padding-top: 55px;
     justify-content: center;
     align-items: flex-start;
+    z-index: 999;
+    background: rgba(0, 0, 0, 0.3);
+    pointer-events: auto; /* ← ADICIONE ESTA LINHA */
 }
 
 #menu > nav {
     background-color: rgba(29, 21, 82, 0.425);
-    
     padding: 10px;
     border-radius: 15px;
 }
@@ -73,7 +84,7 @@ body {
     color: rgba(255, 255, 255, 0.832);
 }
 
-#menu > nav  a {
+#menu > nav a {
     color: white;
     text-decoration: none;
     padding: 3px 6px;
@@ -81,28 +92,8 @@ body {
     text-align: center;
 }
 
-.fa-bars {
-    background-color: rgba(184, 184, 184, 0.34);
-    color: #fafafa;
-    padding: 8px;
-    border-radius: 8px;
-    font-size: 1.5em;
-    cursor: pointer;
-    z-index: 1;
-    box-shadow: 0px 0px 7px 1px rgba(255, 254, 254, 0.662);
-    margin-right: 10px;
-    transition: 500ms;
-}
-
-.fa-bars:hover {
-    transform: scale(1.1);
-    box-shadow: 0px 0px 7px 1px rgba(254, 254, 254, 0.326);
-}
-
-
-
 /* ========================================================== */
-/* 3. HEADER                                                  */
+/* 4. HEADER                                                  */
 /* ========================================================== */
 
 header {
@@ -119,7 +110,29 @@ header {
 }
 
 /* ========================================================== */
-/* HEADER - DIVS                                              */
+/* 4.1 BOTÃO DO MENU                                          */
+/* ========================================================== */
+
+.fa-bars {
+    background-color: rgba(184, 184, 184, 0.34);
+    color: #fafafa;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 1.5em;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0px 0px 7px 1px rgba(255, 254, 254, 0.662);
+    margin-right: 10px;
+    transition: 500ms;
+}
+
+.fa-bars:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 0px 7px 1px rgba(254, 254, 254, 0.326);
+}
+
+/* ========================================================== */
+/* 4.2 HEADER - DIVS                                          */
 /* ========================================================== */
 
 .header-left,
@@ -129,7 +142,6 @@ header {
     align-items: center;
 }
 
-/* Esquerda: título */
 .header-left {
     flex: 1;
     justify-content: flex-start;
@@ -140,7 +152,6 @@ header {
     font-weight: 700;
 }
 
-/* Centro: navegação + mês */
 .header-center {
     flex: 2;
     justify-content: center;
@@ -170,26 +181,13 @@ header {
     text-align: center;
 }
 
-/* Direita: switch */
 .header-right {
     flex: 1;
     justify-content: flex-end;
 }
 
 /* ========================================================== */
-/* 3.5 CONTROLES DE VISIBILIDADE                              */
-/* ========================================================== */
-
-.desktop-only {
-    display: none;
-}
-
-.mobile-only {
-    display: flex;
-}
-
-/* ========================================================== */
-/* 4. SWITCH DE CONTRATOS                                     */
+/* 5. SWITCH DE CONTRATOS                                     */
 /* ========================================================== */
 
 .contract-switch {
@@ -253,7 +251,7 @@ input:checked + .slider:before {
 }
 
 /* ========================================================== */
-/* 5. MAIN                                                    */
+/* 6. MAIN                                                    */
 /* ========================================================== */
 
 main {
@@ -262,7 +260,7 @@ main {
 }
 
 /* ========================================================== */
-/* 6. FOOTER                                                  */
+/* 7. FOOTER                                                  */
 /* ========================================================== */
 
 footer {
@@ -276,7 +274,19 @@ footer {
 }
 
 /* ========================================================== */
-/* 7. CONTROLES DO CALENDÁRIO (FORA DO HEADER)                */
+/* 8. CONTROLES DE VISIBILIDADE                               */
+/* ========================================================== */
+
+.desktop-only {
+    display: none;
+}
+
+.mobile-only {
+    display: flex;
+}
+
+/* ========================================================== */
+/* 9. CONTROLES DO CALENDÁRIO (FORA DO HEADER)                */
 /* ========================================================== */
 
 .calendar-controls {
@@ -311,7 +321,7 @@ footer {
 }
 
 /* ========================================================== */
-/* 8. FILTROS                                                 */
+/* 10. FILTROS                                                */
 /* ========================================================== */
 
 .filters-section {
@@ -357,7 +367,7 @@ footer {
 }
 
 /* ========================================================== */
-/* 9. CALENDÁRIO (GRID)                                       */
+/* 11. CALENDÁRIO (GRID)                                      */
 /* ========================================================== */
 
 #calendar-container {
@@ -433,7 +443,7 @@ footer {
 }
 
 /* ========================================================== */
-/* DIAS COM ATIVIDADES - FUNDO VERDE CLARO                    */
+/* 11.1 DIAS COM ATIVIDADES - FUNDO VERDE CLARO              */
 /* ========================================================== */
 
 .day.has-activity {
@@ -451,7 +461,7 @@ footer {
 }
 
 /* ========================================================== */
-/* 10. MODAL - PRINCIPAL                                      */
+/* 12. MODAL - PRINCIPAL                                      */
 /* ========================================================== */
 
 .modal {
@@ -523,7 +533,7 @@ footer {
 }
 
 /* ========================================================== */
-/* 11. MODAL - ITENS DE ATIVIDADE                             */
+/* 13. MODAL - ITENS DE ATIVIDADE                             */
 /* ========================================================== */
 
 .activity-item {
@@ -545,7 +555,6 @@ footer {
     color: #555;
 }
 
-/* Badge de contagem */
 .badge {
     background: #007bff;
     color: white;
@@ -555,7 +564,6 @@ footer {
     margin-left: 8px;
 }
 
-/* Grupo no modal */
 .group-item {
     border-left: 4px solid #007bff;
     transition: background 0.2s;
@@ -565,13 +573,11 @@ footer {
     background: #f0f7ff;
 }
 
-/* Item de feriado */
 .holiday-item {
     background: #ffebeb;
     border-left: 4px solid #ff6b6b;
 }
 
-/* Detalhe da atividade */
 .detail-item {
     background: #f8f9fa;
     border-left: 4px solid #007bff;
@@ -581,7 +587,6 @@ footer {
     margin: 4px 0;
 }
 
-/* Botão voltar */
 .btn-back {
     background: #f0f0f0;
     border: 1px solid #ddd;
@@ -597,7 +602,6 @@ footer {
     background: #e0e0e0;
 }
 
-/* Botão adicionar observação */
 .btn-add-obs {
     background: #28a745;
     color: white;
@@ -616,7 +620,7 @@ footer {
 }
 
 /* ========================================================== */
-/* 12. MODAL - PLANTÃO                                        */
+/* 14. MODAL - PLANTÃO                                        */
 /* ========================================================== */
 
 .on-call-container {
@@ -644,10 +648,6 @@ footer {
     z-index: 0;
 }
 
-/* ========================================================== */
-/* PLANTÃO ATIVO - PULSO VERDE SUAVE                          */
-/* ========================================================== */
-
 .on-call-modal.on-call-active {
     background-color: #d4edda;
     border-left-color: #28a745;
@@ -664,16 +664,12 @@ footer {
     }
 }
 
-/* ========================================================== */
-/* REMOVER O BADGE "AGORA" (NÃO SERÁ MAIS USADO)             */
-/* ========================================================== */
-
 .on-call-badge {
     display: none;
 }
 
 /* ========================================================== */
-/* 13. TAGS FLUTUANTES - PERIODICIDADE E CATEGORIA           */
+/* 15. TAGS FLUTUANTES - PERIODICIDADE E CATEGORIA           */
 /* ========================================================== */
 
 .tags-container {
@@ -695,7 +691,6 @@ footer {
     background: transparent;
 }
 
-/* ---- Periodicidade ---- */
 .tag-periodicidade {
     color: #0056b3;
     border-color: #0056b3;
@@ -738,7 +733,6 @@ footer {
     background: #fdedec;
 }
 
-/* ---- Categoria ---- */
 .tag-categoria {
     color: #1e7e34;
     border-color: #1e7e34;
@@ -769,7 +763,6 @@ footer {
     background: #fbe9e7;
 }
 
-/* ---- Descrição da atividade (abaixo das tags) ---- */
 .activity-description {
     font-size: 0.95rem;
     font-weight: 600;
@@ -779,7 +772,7 @@ footer {
 }
 
 /* ========================================================== */
-/* 14. MODAL - EMPRESA (FILTRO)                               */
+/* 16. MODAL - EMPRESA (FILTRO)                               */
 /* ========================================================== */
 
 .company-list {
@@ -845,7 +838,7 @@ footer {
 }
 
 /* ========================================================== */
-/* 15. RESPONSIVIDADE - MOBILE (até 600px)                    */
+/* 17. RESPONSIVIDADE - MOBILE (até 600px)                    */
 /* ========================================================== */
 
 @media (max-width: 600px) {
@@ -855,11 +848,8 @@ footer {
         padding: 12px;
     }
 
-
     .header-center {
         display: none;
-        width: 100%;
-        justify-content: center;
     }
 
     .header-left h1 {
@@ -949,11 +939,6 @@ footer {
         gap: 4px;
     }
 
-    .on-call-badge {
-        font-size: 0.55rem;
-        padding: 1px 8px;
-    }
-
     .tag {
         font-size: 0.5rem;
         padding: 1px 8px;
@@ -972,10 +957,15 @@ footer {
         font-size: 12px;
         padding: 8px 12px;
     }
+
+    .fa-bars {
+        font-size: 1.2em;
+        padding: 6px;
+    }
 }
 
 /* ========================================================== */
-/* 16. RESPONSIVIDADE - TABLET (601px - 1023px)              */
+/* 18. RESPONSIVIDADE - TABLET (601px - 1023px)               */
 /* ========================================================== */
 
 @media (min-width: 601px) and (max-width: 1023px) {
@@ -1059,7 +1049,7 @@ footer {
 }
 
 /* ========================================================== */
-/* 17. RESPONSIVIDADE - DESKTOP (1024px+)                     */
+/* 19. RESPONSIVIDADE - DESKTOP (1024px+)                     */
 /* ========================================================== */
 
 @media (min-width: 1024px) {
@@ -1069,7 +1059,7 @@ footer {
         padding: 20px;
         max-width: 1400px;
         margin: 0 auto;
-    } 
+    }
 
     .fa-bars {
         position: absolute;
@@ -1082,7 +1072,6 @@ footer {
         box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.553) !important;
     }
 
-    /* Mostra controles no header, esconde os de fora */
     .desktop-only {
         display: flex !important;
     }

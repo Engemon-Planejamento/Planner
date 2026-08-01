@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Observação</title>
+    <link rel="stylesheet" href="../css/estilo.css">
+    <link rel="stylesheet" href="../css/forms.css">
+</head>
+
+<body>
+    <div id="container">
+        <header>
+            <h1>📝 Adicionar Observação</h1>
+            <a href="#" onclick="window.close()" class="btn-voltar">← Voltar</a>
+        </header>
+        <main>
+            <section class="form-section">
+                <!-- Informações da Atividade -->
+                <div id="info-activity"
+                    style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+                    <p><strong>🏢 Empresa:</strong> <span id="info-empresa"></span></p>
+                    <p><strong>📋 Atividade:</strong> <span id="info-descricao"></span></p>
+                </div>
+
+                <form id="form-observacao">
+                    <input type="hidden" id="atividade-id" value="">
+
+                    <!-- Descrição da Atividade (OBRIGATÓRIO) -->
+                    <div class="form-group">
+                        <label for="inDescricao">* Descrição da Atividade</label>
+                        <textarea id="inDescricao" rows="3"
+                            placeholder="Ex: Inspeção, Leitura termográfica, Limpeza, Aperto de bornes e conexões"
+                            required></textarea>
+                        <small style="color: #888;">Descreva o que será feito na atividade</small>
+                    </div>
+
+                    <!-- Equipamentos (OBRIGATÓRIO) -->
+                    <div class="form-group">
+                        <label for="inEquipamentos">* Equipamentos</label>
+                        <textarea id="inEquipamentos" rows="3"
+                            placeholder="Ex: STS1-1-1-1 / STS1-1-1-2&#10;STS1-1-2-1 / STS1-1-2-2" required></textarea>
+                        <small style="color: #888;">Lista dos equipamentos que serão atendidos</small>
+                    </div>
+
+                    <!-- CHG (OPCIONAL) -->
+                    <div class="form-group">
+                        <label for="inChg">CHG (opcional)</label>
+                        <input type="text" id="inChg" placeholder="Ex: CHG-2026-001">
+                        <small style="color: #888;">Número da mudança (apenas para atividades específicas)</small>
+                    </div>
+
+                    <!-- Ações -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn-salvar">💾 Salvar Observação</button>
+                        <button type="reset" class="btn-limpar">🔄 Limpar</button>
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/add-observation.js"></script>
+</body>
+
+</html>
