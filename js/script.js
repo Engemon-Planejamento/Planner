@@ -657,7 +657,7 @@ function abrirNivel2(empresa, atividades) {
 // 14. MODAL - NÍVEL 3: DETALHES DA ATIVIDADE                 */
 // ========================================================== */
 
-function abrirNivel3(activity) {
+async function abrirNivel3(activity) {
     const activitiesList = document.getElementById('activities-list');
     const modalDateDisplay = document.getElementById('modal-date-display');
 
@@ -667,9 +667,9 @@ function abrirNivel3(activity) {
 
     activitiesList.innerHTML = '';
 
-    // ==========================================================
-    // BOTÃO VOLTAR (VOLTA PARA O NÍVEL 2)
-    // ==========================================================
+    // ========================================================== */
+    // BOTÃO VOLTAR (VOLTA PARA O NÍVEL 2)                        */
+    // ========================================================== */
 
     const btnVoltar = document.createElement('button');
     btnVoltar.className = 'btn-back';
@@ -681,14 +681,13 @@ function abrirNivel3(activity) {
     });
     activitiesList.appendChild(btnVoltar);
 
-    // ==========================================================
-    // DETALHES DA ATIVIDADE (APENAS DESCRIÇÃO)
-    // ==========================================================
+    // ========================================================== */
+    // DETALHES DA ATIVIDADE (APENAS DESCRIÇÃO)                   */
+    // ========================================================== */
 
     const detailDiv = document.createElement('div');
     detailDiv.className = 'activity-item detail-item';
 
-    // Mostra apenas a descrição da atividade
     const descricao = activity.descricao || 'Sem descrição';
     detailDiv.innerHTML = `
         <h4>${activity.empresa}</h4>
@@ -696,34 +695,87 @@ function abrirNivel3(activity) {
     `;
     activitiesList.appendChild(detailDiv);
 
-    // ==========================================================
-    // OBSERVAÇÕES
-    // ==========================================================
+    // ========================================================== */
+    // OBSERVAÇÕES                                                 */
+    // ========================================================== */
 
     const obsTitle = document.createElement('h5');
     obsTitle.textContent = '📝 Observações:';
     obsTitle.style.cssText = 'margin-top: 20px; margin-bottom: 10px; color: #555;';
     activitiesList.appendChild(obsTitle);
 
-    const noObs = document.createElement('p');
-    noObs.textContent = 'Nenhuma observação para esta atividade.';
-    noObs.style.cssText = 'color: #888; font-style: italic;';
-    activitiesList.appendChild(noObs);
+    // Container para observações
+    const obsContainer = document.createElement('div');
+    obsContainer.id = 'obs-container';
+    obsContainer.style.cssText = 'display: flex; flex-direction: column; gap: 8px;';
+    activitiesList.appendChild(obsContainer);
 
-    // ==========================================================
-    // BOTÃO ADICIONAR OBSERVAÇÃO (APENAS PARA NV1 - MASTER)
-    // ==========================================================
+    // ========================================================== */
+    // CARREGAR OBSERVAÇÕES DO FIRESTORE                          */
+    // ========================================================== */
 
-    // Verifica se o usuário tem permissão (NV1 = Master)
-    // Por enquanto, usamos uma variável de controle
-    // Depois será substituída pela lógica do token
-    const isMaster = true; // TODO: Substituir pela lógica do link NV1
+    try {
+        const snapshot = await db.collection('observacoes')
+            .where('atividadeId', '==', activity.id)
+            .orderBy('dataEnvio', 'desc')
+            .get();
 
-    /* if (podeEditar()) {
-        // ... botão adicionar observação
-        } */
+        if (snapshot.empty) {
+            const noObs = document.createElement('p');
+            noObs.textContent = 'Nenhuma observação para esta atividade.';
+            noObs.style.cssText = 'color: #888; font-style: italic;';
+            obsContainer.appendChild(noObs);
+        } else {
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const obsDiv = document.createElement('div');
+                obsDiv.style.cssText = `
+                background: #f9f9f9;
+                border-left: 3px solid #28a745;
+                padding: 10px;
+                border-radius: 4px;
+                margin-bottom: 4px;
+            `;
 
-    if (isMaster) {
+                let dataEnvio = '';
+                if (data.dataEnvio) {
+                    const dataObj = data.dataEnvio.toDate ? data.dataEnvio.toDate() : new Date(data.dataEnvio);
+                    dataEnvio = dataObj.toLocaleString('pt-BR');
+                }
+
+                obsDiv.innerHTML = `
+                <p style="margin: 0 0 5px 0; font-weight: 600;">📋 Descrição:</p>
+                <p style="margin: 0 0 10px 0; font-size: 0.9rem;">${data.descricao || 'N/A'}</p>
+                <p style="margin: 0 0 5px 0; font-weight: 600;">🔧 Equipamentos:</p>
+                <p style="margin: 0 0 8px 0; font-size: 0.9rem; white-space: pre-line;">${data.equipamentos || 'N/A'}</p>
+                ${data.chg ? `<p style="margin: 0 0 8px 0; font-size: 0.85rem; color: #666;">📌 CHG: ${data.chg}</p>` : ''}
+                ${data.mopArquivo ? `
+                    <p style="margin: 0 0 5px 0; font-weight: 600;">📎 MOP:</p>
+                    <p style="margin: 0 0 8px 0;">
+                        <a href="../archives/${data.mopArquivo}" target="_blank" 
+                           style="color: #007bff; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                            📄 ${data.mopArquivo}
+                        </a>
+                    </p>
+                ` : ''}
+                ${dataEnvio ? `<small style="color: #888;">📅 ${dataEnvio}</small>` : ''}
+            `;
+                obsContainer.appendChild(obsDiv);
+            });
+        }
+    } catch (error) {
+        console.error('❌ Erro ao carregar observações:', error);
+        const noObs = document.createElement('p');
+        noObs.textContent = 'Erro ao carregar observações.';
+        noObs.style.cssText = 'color: #888; font-style: italic;';
+        obsContainer.appendChild(noObs);
+    }
+
+    // ========================================================== */
+    // BOTÃO ADICIONAR OBSERVAÇÃO (APENAS PARA NV1 - MASTER)     */
+    // ========================================================== */
+
+   /* if (isMaster() || podeEditar()) {
         const btnAddObs = document.createElement('button');
         btnAddObs.className = 'btn-add-obs';
         btnAddObs.textContent = '+ Adicionar Observação';
@@ -732,12 +784,27 @@ function abrirNivel3(activity) {
             const empresa = activity.empresa;
             const descricao = activity.descricao;
 
-            // Abre a página de observação em nova aba
             const url = `pages/add-observation.html?atividadeId=${atividadeId}&empresa=${encodeURIComponent(empresa)}&descricao=${encodeURIComponent(descricao)}`;
             window.open(url, '_blank');
         });
         activitiesList.appendChild(btnAddObs);
-    }
+    }*/
+    // ========================================================== */
+    // BOTÃO ADICIONAR OBSERVAÇÃO (SEM RESTRIÇÃO)                 */
+    // ========================================================== */
+
+    const btnAddObs = document.createElement('button');
+    btnAddObs.className = 'btn-add-obs';
+    btnAddObs.textContent = '+ Adicionar Observação';
+    btnAddObs.addEventListener('click', () => {
+        const atividadeId = activity.id;
+        const empresa = activity.empresa;
+        const descricao = activity.descricao;
+
+        const url = `pages/add-observation.html?atividadeId=${atividadeId}&empresa=${encodeURIComponent(empresa)}&descricao=${encodeURIComponent(descricao)}`;
+        window.open(url, '_blank');
+    });
+    activitiesList.appendChild(btnAddObs);
 }
 
 

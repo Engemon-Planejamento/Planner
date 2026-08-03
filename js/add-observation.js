@@ -23,6 +23,7 @@ form.addEventListener('submit', async (e) => {
     const descricaoAtividade = document.getElementById('inDescricao').value.trim();
     const equipamentos = document.getElementById('inEquipamentos').value.trim();
     const chg = document.getElementById('inChg').value.trim();
+    const mopArquivo = document.getElementById('inMopArquivo').value.trim();
 
     if (!descricaoAtividade) {
         alert('⚠️ Digite a descrição da atividade');
@@ -41,6 +42,10 @@ form.addEventListener('submit', async (e) => {
         return;
     }
 
+    // ========================================================== */
+    // MONTA OS DADOS                                             */
+    // ========================================================== */
+
     const dados = {
         atividadeId: atividadeId,
         descricao: descricaoAtividade,
@@ -49,6 +54,11 @@ form.addEventListener('submit', async (e) => {
     };
 
     if (chg) dados.chg = chg;
+    if (mopArquivo) dados.mopArquivo = mopArquivo;
+
+    // ========================================================== */
+    // SALVA NO FIRESTORE                                         */
+    // ========================================================== */
 
     try {
         await db.collection('observacoes').add(dados);

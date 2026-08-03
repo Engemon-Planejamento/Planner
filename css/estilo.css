@@ -502,7 +502,7 @@ footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    padding-right: 15px;
 }
 
 .modal-header-controls h3 {
@@ -513,6 +513,7 @@ footer {
 .pdf-clickable {
     cursor: pointer;
     width: 30px;
+    padding-right: 10px;
 }
 
 #modal-team-info {
