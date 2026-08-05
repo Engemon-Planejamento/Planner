@@ -752,9 +752,11 @@ async function abrirNivel3(activity) {
                 ${data.mopArquivo ? `
                     <p style="margin: 0 0 5px 0; font-weight: 600;">📎 MOP:</p>
                     <p style="margin: 0 0 8px 0;">
-                        <a href="https://engemon-planejamento.github.io/Planner/archives/${data.mopArquivo}" target="_blank" 
-                           style="color: #007bff; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
-                            📄 ${data.mopArquivo}
+                        <span style="display: inline-block; margin-right: 10px;">📄 ${data.mopArquivo}</span>
+                        <a href="https://engemon-planejamento.github.io/Planner/archives/${data.mopArquivo}" 
+                        download 
+                        style="background: #28a745; color: white; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; text-decoration: none; font-size: 0.85rem;">
+                            ⬇️ Download
                         </a>
                     </p>
                 ` : ''}
@@ -775,20 +777,20 @@ async function abrirNivel3(activity) {
     // BOTÃO ADICIONAR OBSERVAÇÃO (APENAS PARA NV1 - MASTER)     */
     // ========================================================== */
 
-   /* if (isMaster() || podeEditar()) {
-        const btnAddObs = document.createElement('button');
-        btnAddObs.className = 'btn-add-obs';
-        btnAddObs.textContent = '+ Adicionar Observação';
-        btnAddObs.addEventListener('click', () => {
-            const atividadeId = activity.id;
-            const empresa = activity.empresa;
-            const descricao = activity.descricao;
-
-            const url = `pages/add-observation.html?atividadeId=${atividadeId}&empresa=${encodeURIComponent(empresa)}&descricao=${encodeURIComponent(descricao)}`;
-            window.open(url, '_blank');
-        });
-        activitiesList.appendChild(btnAddObs);
-    }*/
+    /* if (isMaster() || podeEditar()) {
+         const btnAddObs = document.createElement('button');
+         btnAddObs.className = 'btn-add-obs';
+         btnAddObs.textContent = '+ Adicionar Observação';
+         btnAddObs.addEventListener('click', () => {
+             const atividadeId = activity.id;
+             const empresa = activity.empresa;
+             const descricao = activity.descricao;
+ 
+             const url = `pages/add-observation.html?atividadeId=${atividadeId}&empresa=${encodeURIComponent(empresa)}&descricao=${encodeURIComponent(descricao)}`;
+             window.open(url, '_blank');
+         });
+         activitiesList.appendChild(btnAddObs);
+     }*/
     // ========================================================== */
     // BOTÃO ADICIONAR OBSERVAÇÃO (SEM RESTRIÇÃO)                 */
     // ========================================================== */
