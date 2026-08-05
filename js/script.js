@@ -752,7 +752,7 @@ async function abrirNivel3(activity) {
                 ${data.mopArquivo ? `
                     <p style="margin: 0 0 5px 0; font-weight: 600;">📎 MOP:</p>
                     <p style="margin: 0 0 8px 0;">
-                        <a href="../archives/${data.mopArquivo}" target="_blank" 
+                        <a href="/archives/${data.mopArquivo}" target="_blank" 
                            style="color: #007bff; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
                             📄 ${data.mopArquivo}
                         </a>
