@@ -419,7 +419,6 @@ document.addEventListener('contratoAlterado', function(e) {
 async function carregarEmpresasParaFiltro() {
     try {
         const snapshot = await db.collection('empresas')
-            .where('ativo', '==', true)
             .orderBy('nome')
             .get();
 
