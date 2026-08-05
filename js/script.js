@@ -16,23 +16,31 @@ const DIAS_SEMANA = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
 let data = new Date();
 let currentYear = data.getFullYear();
-let currentMonth = data.getMonth(); // Julho (0 = Janeiro)
+let currentMonth = data.getMonth();
 let atividades = [];
 let feriados = [];
-let contratoAtivo = 'TAMBORE'; // ou 'CURITIBA'
+let contratoAtivo = 'TAMBORE';
+
+// ========================================================== */
+// ESTADO DOS FILTROS                                         */
+// ========================================================== */
+
+let filtros = {
+    empresa: '',
+    descricao: ''
+};
 
 let modalState = {
     data: '',
-    todasAtividades: [],  // Todas as atividades do dia
-    feriados: [],         // Feriados do dia
-    nivel: 1              // 1, 2 ou 3
+    todasAtividades: [],
+    feriados: [],
+    nivel: 1
 };
 
 let nivelAtual = 1;
 let dataAtual = '';
 let atividadesDoDia = [];
 
-// EXPORTA A VARIÁVEL PARA OUTROS MÓDULOS
 window.contratoAtivo = contratoAtivo;
 
 
@@ -40,77 +48,33 @@ window.contratoAtivo = contratoAtivo;
 // 2.5 PERMISSÕES DE ACESSO (NÍVEIS)                          */
 // ========================================================== */
 
-/**
- * Obtém o nível de acesso do usuário baseado no token da URL
- * @returns {number} 1 = Master, 2 = Visualizador, 3 = Empresa Específica, 0 = Sem acesso
- */
 function getNivelAcesso() {
-    // ==========================================================
-    // MODO DE TESTE: Altere aqui para simular diferentes níveis
-    // ==========================================================
-
-    // Para teste, descomente a linha abaixo e comente as outras
-    // return 1; // Master
-    // return 2; // Visualizador
-    // return 3; // Empresa Específica
-
-    // ==========================================================
-    // LÓGICA REAL (quando os links estiverem prontos)
-    // ==========================================================
-
-    // Busca o token na URL
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
 
     if (!token) {
-        // Se não tiver token, acesso padrão = Visualizador (NV2)
         return 2;
     }
 
-    // TODO: Descriptografar o token e extrair o nível
-    // Por enquanto, retorna 1 para teste
-    // const dados = decryptToken(token);
-    // return dados.nivel || 0;
-
-    return 1; // Temporário - sempre retorna Master durante desenvolvimento
+    return 1;
 }
 
-/**
- * Verifica se o usuário tem acesso Master (NV1)
- * @returns {boolean}
- */
 function isMaster() {
     return getNivelAcesso() === 1;
 }
 
-/**
- * Verifica se o usuário tem acesso Visualizador (NV2)
- * @returns {boolean}
- */
 function isVisualizador() {
     return getNivelAcesso() === 2;
 }
 
-/**
- * Verifica se o usuário tem acesso de Empresa Específica (NV3)
- * @returns {boolean}
- */
 function isEmpresaEspecifica() {
     return getNivelAcesso() === 3;
 }
 
-/**
- * Verifica se o usuário pode editar/cadastrar (apenas NV1)
- * @returns {boolean}
- */
 function podeEditar() {
     return isMaster();
 }
 
-/**
- * Verifica se o usuário pode visualizar (NV1 ou NV2)
- * @returns {boolean}
- */
 function podeVisualizar() {
     return isMaster() || isVisualizador();
 }
@@ -134,6 +98,19 @@ const nextMonthBtnDesktop = document.getElementById('next-month-desktop');
 const closeModalBtn = document.getElementById('close-modal');
 const modal = document.getElementById('activity-modal');
 
+// ========================================================== */
+// ELEMENTOS DOS FILTROS                                      */
+// ========================================================== */
+
+const descriptionFilter = document.getElementById('description-filter');
+const companyFilterBtn = document.getElementById('company-filter-btn');
+const clearFiltersBtn = document.getElementById('clear-filters');
+const companyList = document.querySelector('.company-list');
+const applyCompanyFilter = document.getElementById('apply-company-filter');
+const cancelCompanyFilter = document.getElementById('cancel-company-filter');
+const closeCompanyModal = document.getElementById('close-company-modal');
+const companyModal = document.getElementById('company-modal');
+
 
 // ========================================================== */
 // 4. FUNÇÃO PARA ATUALIZAR TÍTULO EM AMBOS OS CONTROLES     */
@@ -142,12 +119,10 @@ const modal = document.getElementById('activity-modal');
 function atualizarTituloMes(ano, mes) {
     const texto = `${MESES[mes]} ${ano}`;
 
-    // Atualiza mobile/tablet
     if (currentMonthYearHeader) {
         currentMonthYearHeader.textContent = texto;
     }
 
-    // Atualiza desktop
     if (currentMonthYearHeaderDesktop) {
         currentMonthYearHeaderDesktop.textContent = texto;
     }
@@ -162,16 +137,54 @@ function filtrarPorContrato(atividadesArray) {
     return atividadesArray.filter(a =>
         a.unidade === contratoAtivo ||
         a.unidade === 'AMBAS' ||
-        !a.unidade // se não tiver unidade, mostra em ambos
+        !a.unidade
     );
 }
 
+// ========================================================== */
+// FUNÇÃO PARA APLICAR FILTROS COMBINADOS                     */
+// ========================================================== */
 
+function aplicarFiltros() {
+    renderizarCalendario(currentYear, currentMonth);
+}
 
+// ========================================================== */
+// FUNÇÃO PARA FILTRAR ATIVIDADES                             */
+// ========================================================== */
+
+function filtrarAtividades(atividadesArray) {
+    let resultado = atividadesArray;
+
+    // Filtro por contrato
+    resultado = resultado.filter(a =>
+        a.unidade === contratoAtivo ||
+        a.unidade === 'AMBAS' ||
+        !a.unidade
+    );
+
+    // Filtro por empresa
+    if (filtros.empresa) {
+        resultado = resultado.filter(a =>
+            a.empresa && a.empresa.toLowerCase() === filtros.empresa.toLowerCase()
+        );
+    }
+
+    // Filtro por descrição (busca em descrição, equipamentos, CHG)
+    if (filtros.descricao) {
+        const termo = filtros.descricao.toLowerCase();
+        resultado = resultado.filter(a => {
+            if (a.descricao && a.descricao.toLowerCase().includes(termo)) return true;
+            return false;
+        });
+    }
+
+    return resultado;
+}
 
 
 // ========================================================== */
-// 7. FUNÇÃO PARA ORDENAR GRUPOS                              */
+// 6. FUNÇÃO PARA ORDENAR GRUPOS                              */
 // ========================================================== */
 
 function getOrdem(empresa) {
@@ -182,23 +195,17 @@ function getOrdem(empresa) {
 
 
 // ========================================================== */
-// 8. FUNÇÃO PARA CARREGAR DADOS DO FIRESTORE                 */
+// 7. FUNÇÃO PARA CARREGAR DADOS DO FIRESTORE                 */
 // ========================================================== */
 
 async function carregarDados() {
     try {
-        // ==========================================================
-        // 1. CARREGAR ESCALA (PRIMEIRO!)
-        // ==========================================================
         if (typeof carregarEscala === 'function') {
             await carregarEscala();
         } else {
             console.warn('⚠️ carregarEscala não disponível');
         }
 
-        // ==========================================================
-        // 2. CARREGAR ATIVIDADES
-        // ==========================================================
         const snapshotAtividades = await db.collection('atividades').get();
         atividades = [];
         snapshotAtividades.forEach(doc => {
@@ -208,9 +215,6 @@ async function carregarDados() {
             });
         });
 
-        // ==========================================================
-        // 3. CARREGAR FERIADOS
-        // ==========================================================
         const snapshotFeriados = await db.collection('feriados').get();
         feriados = [];
         snapshotFeriados.forEach(doc => {
@@ -220,9 +224,6 @@ async function carregarDados() {
             });
         });
 
-        // ==========================================================
-        // 4. CARREGAR PLANTÃO DO FIRESTORE (se houver)
-        // ==========================================================
         try {
             const snapshotPlantao = await db.collection('plantao').get();
             const plantaoData = [];
@@ -232,13 +233,11 @@ async function carregarDados() {
                     ...doc.data()
                 });
             });
-            // Atualiza o plantão no módulo equipes
             if (typeof atualizarPlantao === 'function') {
                 atualizarPlantao(plantaoData);
             }
             console.log(`✅ Carregados ${plantaoData.length} dias de plantão do Firebase`);
         } catch (e) {
-            // Se não tiver coleção plantao, ignora
             if (typeof atualizarPlantao === 'function') {
                 atualizarPlantao([]);
             }
@@ -252,13 +251,12 @@ async function carregarDados() {
 
     } catch (error) {
         console.error('❌ Erro ao carregar dados do Firebase:', error);
-        // Se der erro, tenta carregar do JSON como fallback
         await carregarDadosFallback();
     }
 }
 
 // ========================================================== */
-// 8.5 FALLBACK - CARREGAR DO JSON (CASO FIREBASE FALHE)     */
+// 7.5 FALLBACK - CARREGAR DO JSON (CASO FIREBASE FALHE)     */
 // ========================================================== */
 
 async function carregarDadosFallback() {
@@ -277,7 +275,6 @@ async function carregarDadosFallback() {
 
     } catch (error) {
         console.error('❌ Erro ao carregar dados do JSON:', error);
-        // Se tudo falhar, renderiza vazio
         atividades = [];
         feriados = [];
         renderizarCalendario(currentYear, currentMonth);
@@ -286,56 +283,43 @@ async function carregarDadosFallback() {
 
 
 // ========================================================== */
-// 9. FUNÇÃO PARA RENDERIZAR O CALENDÁRIO                     */
+// 8. FUNÇÃO PARA RENDERIZAR O CALENDÁRIO                     */
 // ========================================================== */
 
 function renderizarCalendario(ano, mes) {
     console.log(`📅 Renderizando: ${MESES[mes]} ${ano} - Contrato: ${contratoAtivo}`);
 
-    // 1. Atualiza título (ambos os controles)
     atualizarTituloMes(ano, mes);
-
-    // 2. Limpa o grid
     daysGrid.innerHTML = '';
 
-    // 3. Primeiro dia do mês (0 = Domingo)
     const primeiroDia = new Date(ano, mes, 1).getDay();
-
-    // 4. Quantos dias tem o mês
     const diasNoMes = new Date(ano, mes + 1, 0).getDate();
 
-    // 5. Preenche dias vazios antes do primeiro dia
     for (let i = 0; i < primeiroDia; i++) {
         const div = document.createElement('div');
         div.className = 'day empty';
         daysGrid.appendChild(div);
     }
 
-    // 6. Preenche os dias do mês
     for (let dia = 1; dia <= diasNoMes; dia++) {
-        // Formata a data: YYYY-MM-DD
         const dataString = `${ano}-${String(mes + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
 
-        // Cria o elemento do dia
         const div = document.createElement('div');
         div.className = 'day';
         div.dataset.data = dataString;
 
-        // Número do dia
         const numero = document.createElement('span');
         numero.className = 'day-number';
         numero.textContent = dia;
         div.appendChild(numero);
 
         // ==========================================================
-        // VERIFICA ATIVIDADES E FERIADOS
+        // VERIFICA ATIVIDADES E FERIADOS (COM FILTROS)
         // ==========================================================
 
-        // Busca atividades do dia
         const atividadesDoDia = atividades.filter(a => a.data === dataString);
-        const atividadesFiltradas = filtrarPorContrato(atividadesDoDia);
+        const atividadesFiltradas = filtrarAtividades(atividadesDoDia);
 
-        // Busca feriados do dia
         const feriadosDoDia = feriados.filter(f => f.data === dataString);
         const feriadosFiltrados = feriadosDoDia.filter(f =>
             f.unidade === contratoAtivo ||
@@ -371,9 +355,8 @@ function renderizarCalendario(ano, mes) {
         div.addEventListener('click', () => {
             console.log(`🖱️ Dia clicado: ${dataString}`);
 
-            // Busca atividades e feriados do dia
             const atividadesDoDia = atividades.filter(a => a.data === dataString);
-            const atividadesFiltradas = filtrarPorContrato(atividadesDoDia);
+            const atividadesFiltradas = filtrarAtividades(atividadesDoDia);
 
             const feriadosDoDia = feriados.filter(f => f.data === dataString);
             const feriadosFiltrados = feriadosDoDia.filter(f =>
@@ -382,7 +365,6 @@ function renderizarCalendario(ano, mes) {
                 !f.unidade
             );
 
-            // Abre o modal com os dados
             abrirModal(dataString, atividadesFiltradas, feriadosFiltrados);
         });
 
@@ -392,7 +374,7 @@ function renderizarCalendario(ano, mes) {
 
 
 // ========================================================== */
-// 10. NAVEGAÇÃO ENTRE MESES                                   */
+// 9. NAVEGAÇÃO ENTRE MESES                                   */
 // ========================================================== */
 
 function navegarMes(direcao) {
@@ -412,33 +394,149 @@ function navegarMes(direcao) {
     renderizarCalendario(currentYear, currentMonth);
 }
 
-// Eventos mobile/tablet
 if (prevMonthBtn) prevMonthBtn.addEventListener('click', () => navegarMes('prev'));
 if (nextMonthBtn) nextMonthBtn.addEventListener('click', () => navegarMes('next'));
-
-// Eventos desktop
 if (prevMonthBtnDesktop) prevMonthBtnDesktop.addEventListener('click', () => navegarMes('prev'));
 if (nextMonthBtnDesktop) nextMonthBtnDesktop.addEventListener('click', () => navegarMes('next'));
 
 
 // ========================================================== */
-// 11. EVENTO DO SWITCH                                       */
+// 10. EVENTO DO SWITCH                                       */
 // ========================================================== */
 
-document.addEventListener('contratoAlterado', function (e) {
+document.addEventListener('contratoAlterado', function(e) {
     const contrato = e.detail.contrato;
     console.log(`📅 Re-renderizando calendário para: ${contrato}`);
-
-    // ATUALIZA A VARIÁVEL LOCAL
     contratoAtivo = contrato;
-
-    // Re-renderiza com o novo contrato
     renderizarCalendario(currentYear, currentMonth);
 });
 
 
 // ========================================================== */
-// 12. MODAL - NÍVEL 1: GRUPOS DO DIA                         */
+// 11. FUNÇÃO PARA CARREGAR EMPRESAS PARA O MODAL DE FILTRO  */
+// ========================================================== */
+
+async function carregarEmpresasParaFiltro() {
+    try {
+        const snapshot = await db.collection('empresas')
+            .where('ativo', '==', true)
+            .orderBy('nome')
+            .get();
+
+        companyList.innerHTML = '';
+
+        if (snapshot.empty) {
+            companyList.innerHTML = '<p style="text-align: center; color: #999;">Nenhuma empresa cadastrada</p>';
+            return;
+        }
+
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const label = document.createElement('label');
+            label.className = 'company-option';
+
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = 'company-filter';
+            radio.value = data.nome;
+
+            if (filtros.empresa === data.nome) {
+                radio.checked = true;
+            }
+
+            const span = document.createElement('span');
+            span.textContent = data.nome;
+
+            label.appendChild(radio);
+            label.appendChild(span);
+            companyList.appendChild(label);
+        });
+
+    } catch (error) {
+        console.error('❌ Erro ao carregar empresas:', error);
+        companyList.innerHTML = '<p style="text-align: center; color: #dc3545;">Erro ao carregar empresas</p>';
+    }
+}
+
+
+// ========================================================== */
+// 12. EVENTOS DOS FILTROS                                    */
+// ========================================================== */
+
+// Filtro por descrição (em tempo real)
+if (descriptionFilter) {
+    descriptionFilter.addEventListener('input', function() {
+        filtros.descricao = this.value.trim();
+        aplicarFiltros();
+    });
+}
+
+// Abrir modal de empresas
+if (companyFilterBtn) {
+    companyFilterBtn.addEventListener('click', async function() {
+        await carregarEmpresasParaFiltro();
+        companyModal.style.display = 'block';
+    });
+}
+
+// Aplicar filtro de empresa
+if (applyCompanyFilter) {
+    applyCompanyFilter.addEventListener('click', function() {
+        const selected = document.querySelector('input[name="company-filter"]:checked');
+        if (selected) {
+            filtros.empresa = selected.value;
+            companyFilterBtn.innerHTML = `🏢 ${selected.value}`;
+            companyFilterBtn.classList.add('filtro-aplicado');
+        } else {
+            filtros.empresa = '';
+            companyFilterBtn.innerHTML = '🏢 Selecionar Empresa';
+            companyFilterBtn.classList.remove('filtro-aplicado');
+        }
+        companyModal.style.display = 'none';
+        aplicarFiltros();
+    });
+}
+
+// Cancelar filtro de empresa
+if (cancelCompanyFilter) {
+    cancelCompanyFilter.addEventListener('click', function() {
+        companyModal.style.display = 'none';
+    });
+}
+
+// Fechar modal de empresa (X)
+if (closeCompanyModal) {
+    closeCompanyModal.addEventListener('click', function() {
+        companyModal.style.display = 'none';
+    });
+}
+
+// Fechar modal ao clicar fora
+if (companyModal) {
+    companyModal.addEventListener('click', function(e) {
+        if (e.target === companyModal) {
+            companyModal.style.display = 'none';
+        }
+    });
+}
+
+// Limpar todos os filtros
+if (clearFiltersBtn) {
+    clearFiltersBtn.addEventListener('click', function() {
+        filtros.empresa = '';
+        filtros.descricao = '';
+        if (descriptionFilter) descriptionFilter.value = '';
+        companyFilterBtn.innerHTML = '🏢 Selecionar Empresa';
+        companyFilterBtn.classList.remove('filtro-aplicado');
+        const radios = document.querySelectorAll('input[name="company-filter"]');
+        radios.forEach(r => r.checked = false);
+        aplicarFiltros();
+    });
+}
+
+
+// ========================================================== */
+// 13. MODAL - NÍVEL 1: GRUPOS DO DIA                         */
 // ========================================================== */
 
 function abrirModal(dataString, atividadesDoDia, feriadosDoDia) {
@@ -447,7 +545,6 @@ function abrirModal(dataString, atividadesDoDia, feriadosDoDia) {
     const modalTeamInfo = document.getElementById('modal-team-info');
     const activitiesList = document.getElementById('activities-list');
 
-    // Guarda o estado
     modalState.data = dataString;
     modalState.todasAtividades = atividadesDoDia;
     modalState.feriados = feriadosDoDia;
@@ -480,7 +577,6 @@ function abrirModal(dataString, atividadesDoDia, feriadosDoDia) {
     if (plantaoDoDia) {
         let html = '<div class="on-call-container">';
 
-        // Plantão Diurno
         const isDiaAtual = (plantaoAtual && plantaoAtual.data === dataString && plantaoAtual.turno === 'dia');
         html += `
             <div class="on-call-modal ${isDiaAtual ? 'on-call-active' : ''}">
@@ -489,7 +585,6 @@ function abrirModal(dataString, atividadesDoDia, feriadosDoDia) {
             </div>
         `;
 
-        // Plantão Noturno
         const isNoiteAtual = (plantaoAtual && plantaoAtual.data === dataString && plantaoAtual.turno === 'noite');
         html += `
             <div class="on-call-modal ${isNoiteAtual ? 'on-call-active' : ''}">
@@ -510,7 +605,6 @@ function abrirModal(dataString, atividadesDoDia, feriadosDoDia) {
 
     activitiesList.innerHTML = '';
 
-    // Feriados
     if (feriadosDoDia.length > 0) {
         const feriadoDiv = document.createElement('div');
         feriadoDiv.className = 'activity-item holiday-item';
@@ -521,14 +615,12 @@ function abrirModal(dataString, atividadesDoDia, feriadosDoDia) {
         activitiesList.appendChild(feriadoDiv);
     }
 
-    // Atividades
     if (atividadesDoDia.length === 0 && feriadosDoDia.length === 0) {
         activitiesList.innerHTML = '<p class="no-activity">Nenhuma atividade agendada neste dia.</p>';
         modal.style.display = 'block';
         return;
     }
 
-    // Agrupa por empresa
     const grupos = {};
     atividadesDoDia.forEach(activity => {
         const empresa = activity.empresa;
@@ -538,12 +630,10 @@ function abrirModal(dataString, atividadesDoDia, feriadosDoDia) {
         grupos[empresa].push(activity);
     });
 
-    // Ordena grupos
     const empresasOrdenadas = Object.keys(grupos).sort((a, b) => {
         return getOrdem(b) - getOrdem(a);
     });
 
-    // Renderiza grupos
     empresasOrdenadas.forEach(empresa => {
         const atividadesGrupo = grupos[empresa];
 
@@ -567,7 +657,7 @@ function abrirModal(dataString, atividadesDoDia, feriadosDoDia) {
 
 
 // ========================================================== */
-// 13. MODAL - NÍVEL 2: ATIVIDADES DO GRUPO                   */
+// 14. MODAL - NÍVEL 2: ATIVIDADES DO GRUPO                   */
 // ========================================================== */
 
 function abrirNivel2(empresa, atividades) {
@@ -581,15 +671,10 @@ function abrirNivel2(empresa, atividades) {
 
     activitiesList.innerHTML = '';
 
-    // ==========================================================
-    // BOTÃO VOLTAR (USA O ESTADO COMPLETO)
-    // ==========================================================
-
     const btnVoltar = document.createElement('button');
     btnVoltar.className = 'btn-back';
     btnVoltar.textContent = '← Voltar para grupos';
     btnVoltar.addEventListener('click', () => {
-        // VOLTA PARA O NÍVEL 1 COM TODAS AS ATIVIDADES
         abrirModal(
             modalState.data,
             modalState.todasAtividades,
@@ -598,51 +683,28 @@ function abrirNivel2(empresa, atividades) {
     });
     activitiesList.appendChild(btnVoltar);
 
-    // ==========================================================
-    // TÍTULO DO GRUPO
-    // ==========================================================
-
     const titulo = document.createElement('h4');
     titulo.style.cssText = 'margin: 15px 0 10px 0; color: #007bff; font-size: 1.1rem;';
     titulo.textContent = `📋 ${empresa} (${atividades.length} atividades)`;
     activitiesList.appendChild(titulo);
-
-    // ==========================================================
-    // LISTAR ATIVIDADES (COM TAGS FLUTUANTES NO TOPO)
-    // ==========================================================
 
     atividades.forEach(activity => {
         const div = document.createElement('div');
         div.className = 'activity-item';
         div.style.cursor = 'pointer';
 
-        // ==========================================================
-        // TAGS FLUTUANTES: Periodicidade + Categoria (no topo)
-        // ==========================================================
-
         const periodicidade = activity.periodicidade || '';
         const categoria = activity.categoria || '';
 
         let tagsHtml = '<div class="tags-container">';
-
-        if (periodicidade) {
-            tagsHtml += `<span class="tag tag-periodicidade">${periodicidade}</span>`;
-        }
-
-        if (categoria) {
-            tagsHtml += `<span class="tag tag-categoria">${categoria}</span>`;
-        }
-
+        if (periodicidade) tagsHtml += `<span class="tag tag-periodicidade">${periodicidade}</span>`;
+        if (categoria) tagsHtml += `<span class="tag tag-categoria">${categoria}</span>`;
         tagsHtml += '</div>';
 
-        // ==========================================================
-        // ESTRUTURA DO ITEM: TAGS NO TOPO, DESCRIÇÃO EMBAIXO
-        // ==========================================================
-
         div.innerHTML = `
-        ${tagsHtml}
-        <h4 class="activity-description">${activity.descricao}</h4>
-    `;
+            ${tagsHtml}
+            <h4 class="activity-description">${activity.descricao}</h4>
+        `;
 
         div.addEventListener('click', () => {
             abrirNivel3(activity);
@@ -654,7 +716,7 @@ function abrirNivel2(empresa, atividades) {
 
 
 // ========================================================== */
-// 14. MODAL - NÍVEL 3: DETALHES DA ATIVIDADE                 */
+// 15. MODAL - NÍVEL 3: DETALHES DA ATIVIDADE                 */
 // ========================================================== */
 
 async function abrirNivel3(activity) {
@@ -662,14 +724,9 @@ async function abrirNivel3(activity) {
     const modalDateDisplay = document.getElementById('modal-date-display');
 
     modalState.nivel = 3;
-
     modalDateDisplay.textContent = `Detalhes - ${activity.empresa}`;
 
     activitiesList.innerHTML = '';
-
-    // ========================================================== */
-    // BOTÃO VOLTAR (VOLTA PARA O NÍVEL 2)                        */
-    // ========================================================== */
 
     const btnVoltar = document.createElement('button');
     btnVoltar.className = 'btn-back';
@@ -681,13 +738,8 @@ async function abrirNivel3(activity) {
     });
     activitiesList.appendChild(btnVoltar);
 
-    // ========================================================== */
-    // DETALHES DA ATIVIDADE (APENAS DESCRIÇÃO)                   */
-    // ========================================================== */
-
     const detailDiv = document.createElement('div');
     detailDiv.className = 'activity-item detail-item';
-
     const descricao = activity.descricao || 'Sem descrição';
     detailDiv.innerHTML = `
         <h4>${activity.empresa}</h4>
@@ -704,15 +756,10 @@ async function abrirNivel3(activity) {
     obsTitle.style.cssText = 'margin-top: 20px; margin-bottom: 10px; color: #555;';
     activitiesList.appendChild(obsTitle);
 
-    // Container para observações
     const obsContainer = document.createElement('div');
     obsContainer.id = 'obs-container';
     obsContainer.style.cssText = 'display: flex; flex-direction: column; gap: 8px;';
     activitiesList.appendChild(obsContainer);
-
-    // ========================================================== */
-    // CARREGAR OBSERVAÇÕES DO FIRESTORE                          */
-    // ========================================================== */
 
     try {
         const snapshot = await db.collection('observacoes')
@@ -730,12 +777,12 @@ async function abrirNivel3(activity) {
                 const data = doc.data();
                 const obsDiv = document.createElement('div');
                 obsDiv.style.cssText = `
-                background: #f9f9f9;
-                border-left: 3px solid #28a745;
-                padding: 10px;
-                border-radius: 4px;
-                margin-bottom: 4px;
-            `;
+                    background: #f9f9f9;
+                    border-left: 3px solid #28a745;
+                    padding: 10px;
+                    border-radius: 4px;
+                    margin-bottom: 4px;
+                `;
 
                 let dataEnvio = '';
                 if (data.dataEnvio) {
@@ -744,24 +791,24 @@ async function abrirNivel3(activity) {
                 }
 
                 obsDiv.innerHTML = `
-                <p style="margin: 0 0 5px 0; font-weight: 600;">📋 Descrição:</p>
-                <p style="margin: 0 0 10px 0; font-size: 0.9rem;">${data.descricao || 'N/A'}</p>
-                <p style="margin: 0 0 5px 0; font-weight: 600;">🔧 Equipamentos:</p>
-                <p style="margin: 0 0 8px 0; font-size: 0.9rem; white-space: pre-line;">${data.equipamentos || 'N/A'}</p>
-                ${data.chg ? `<p style="margin: 0 0 8px 0; font-size: 0.85rem; color: #666;">📌 CHG: ${data.chg}</p>` : ''}
-                ${data.mopArquivo ? `
-                    <p style="margin: 0 0 5px 0; font-weight: 600;">📎 MOP:</p>
-                    <p style="margin: 0 0 8px 0;">
-                        <span style="display: inline-block; margin-right: 10px;">📄 ${data.mopArquivo}</span>
-                        <a href="https://engemon-planejamento.github.io/Planner/archives/${data.mopArquivo}" 
-                        download 
-                        style="background: #28a745; color: white; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; text-decoration: none; font-size: 0.85rem;">
-                            ⬇️ Download
-                        </a>
-                    </p>
-                ` : ''}
-                ${dataEnvio ? `<small style="color: #888;">📅 ${dataEnvio}</small>` : ''}
-            `;
+                    <p style="margin: 0 0 5px 0; font-weight: 600;">📋 Descrição:</p>
+                    <p style="margin: 0 0 10px 0; font-size: 0.9rem;">${data.descricao || 'N/A'}</p>
+                    <p style="margin: 0 0 5px 0; font-weight: 600;">🔧 Equipamentos:</p>
+                    <p style="margin: 0 0 8px 0; font-size: 0.9rem; white-space: pre-line;">${data.equipamentos || 'N/A'}</p>
+                    ${data.chg ? `<p style="margin: 0 0 8px 0; font-size: 0.85rem; color: #666;">📌 CHG: ${data.chg}</p>` : ''}
+                    ${data.mopArquivo ? `
+                        <p style="margin: 0 0 5px 0; font-weight: 600;">📎 MOP:</p>
+                        <p style="margin: 0 0 8px 0;">
+                            <span style="display: inline-block; margin-right: 10px;">📄 ${data.mopArquivo}</span>
+                            <a href="https://engemon-planejamento.github.io/Planner/archives/${data.mopArquivo}" 
+                               download 
+                               style="background: #28a745; color: white; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; text-decoration: none; font-size: 0.85rem;">
+                                ⬇️ Download
+                            </a>
+                        </p>
+                    ` : ''}
+                    ${dataEnvio ? `<small style="color: #888;">📅 ${dataEnvio}</small>` : ''}
+                `;
                 obsContainer.appendChild(obsDiv);
             });
         }
@@ -773,24 +820,6 @@ async function abrirNivel3(activity) {
         obsContainer.appendChild(noObs);
     }
 
-    // ========================================================== */
-    // BOTÃO ADICIONAR OBSERVAÇÃO (APENAS PARA NV1 - MASTER)     */
-    // ========================================================== */
-
-    /* if (isMaster() || podeEditar()) {
-         const btnAddObs = document.createElement('button');
-         btnAddObs.className = 'btn-add-obs';
-         btnAddObs.textContent = '+ Adicionar Observação';
-         btnAddObs.addEventListener('click', () => {
-             const atividadeId = activity.id;
-             const empresa = activity.empresa;
-             const descricao = activity.descricao;
- 
-             const url = `pages/add-observation.html?atividadeId=${atividadeId}&empresa=${encodeURIComponent(empresa)}&descricao=${encodeURIComponent(descricao)}`;
-             window.open(url, '_blank');
-         });
-         activitiesList.appendChild(btnAddObs);
-     }*/
     // ========================================================== */
     // BOTÃO ADICIONAR OBSERVAÇÃO (SEM RESTRIÇÃO)                 */
     // ========================================================== */
@@ -811,7 +840,7 @@ async function abrirNivel3(activity) {
 
 
 // ========================================================== */
-// 14. FECHAR MODAL                                           */
+// 16. FECHAR MODAL                                           */
 // ========================================================== */
 
 closeModalBtn.addEventListener('click', () => {
@@ -824,8 +853,9 @@ window.addEventListener('click', (e) => {
     }
 });
 
+
 // ========================================================== */
-// 15. EXPORTAR PDF DO DIA                                    */
+// 17. EXPORTAR PDF DO DIA                                    */
 // ========================================================== */
 
 async function exportarPDF() {
@@ -848,9 +878,6 @@ async function exportarPDF() {
     let y = margin + 10;
     const lineHeight = 7;
 
-    // ========================================================== */
-    // 1. TÍTULO (sem emoji)
-    // ========================================================== */
     doc.setFontSize(16);
     doc.setTextColor(0, 123, 255);
     doc.setFont('helvetica', 'bold');
@@ -858,9 +885,6 @@ async function exportarPDF() {
     doc.text(`RELATORIO DE ATIVIDADES - ${dataFormatada}`, margin, y);
     y += lineHeight + 5;
 
-    // ========================================================== */
-    // 2. PLANTÃO (sem emoji)
-    // ========================================================== */
     doc.setFontSize(11);
     doc.setTextColor(50, 50, 50);
     doc.setFont('helvetica', 'normal');
@@ -872,14 +896,10 @@ async function exportarPDF() {
         y += lineHeight + 3;
     }
 
-    // Linha separadora
     doc.setDrawColor(200, 200, 200);
     doc.line(margin, y, pageWidth - margin, y);
     y += lineHeight;
 
-    // ========================================================== */
-    // 3. ATIVIDADES POR EMPRESA
-    // ========================================================== */
     const grupos = {};
     atividades.forEach(activity => {
         const empresa = activity.empresa;
@@ -899,7 +919,6 @@ async function exportarPDF() {
             y = margin + 10;
         }
 
-        // Nome da empresa (sem emoji)
         doc.setFontSize(13);
         doc.setTextColor(0, 123, 255);
         doc.setFont('helvetica', 'bold');
@@ -928,9 +947,6 @@ async function exportarPDF() {
         y += 2;
     });
 
-    // ========================================================== */
-    // 4. FERIADOS (se houver)
-    // ========================================================== */
     if (feriados && feriados.length > 0) {
         if (y > 260) {
             doc.addPage();
@@ -953,9 +969,6 @@ async function exportarPDF() {
         y += 3;
     }
 
-    // ========================================================== */
-    // 5. RODAPÉ
-    // ========================================================== */
     if (y > 270) {
         doc.addPage();
         y = margin + 10;
@@ -983,30 +996,9 @@ async function exportarPDF() {
     doc.save(nomeArquivo);
 }
 
-// ========================================================== */
-// 16. EXPORTA FUNÇÕES PARA OUTROS MÓDULOS                    */
-// ========================================================== */
-
-window.renderizarCalendario = renderizarCalendario;
-window.currentYear = currentYear;
-window.currentMonth = currentMonth;
 
 // ========================================================== */
-// 17. INICIALIZAÇÃO                                          */
-// ========================================================== */
-
-document.addEventListener('DOMContentLoaded', function () {
-    if (typeof db !== 'undefined') {
-        carregarDados();
-    } else {
-        console.warn('⚠️ Firebase não disponível, usando fallback JSON');
-        carregarDadosFallback();
-    }
-});
-
-
-// ========================================================== */
-// 16. EXPORTA FUNÇÕES PARA OUTROS MÓDULOS                    */
+// 18. EXPORTA FUNÇÕES PARA OUTROS MÓDULOS                    */
 // ========================================================== */
 
 window.renderizarCalendario = renderizarCalendario;
@@ -1015,16 +1007,14 @@ window.currentMonth = currentMonth;
 
 
 // ========================================================== */
-// 17. INICIALIZAÇÃO                                          */
+// 19. INICIALIZAÇÃO                                          */
 // ========================================================== */
 
-// Aguarda o Firebase carregar antes de buscar os dados
-document.addEventListener('DOMContentLoaded', function () {
-    // Verifica se o Firebase está disponível
+document.addEventListener('DOMContentLoaded', function() {
     if (typeof db !== 'undefined') {
         carregarDados();
     } else {
-        console.warn('⚠️ Firebase não disponível, usando fallback JSON');
-        carregarDadosFallback();
+        console.warn('⚠️ Firebase não disponível');
+        renderizarCalendario(currentYear, currentMonth);
     }
 });
